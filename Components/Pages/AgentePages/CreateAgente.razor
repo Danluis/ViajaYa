@@ -1,0 +1,60 @@
+﻿@page "/Agentes/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject AgenteService AgenteService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="agente" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Agente</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="agente.Nombre" />
+                    <ValidationMessage For="@(() => agente.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Codigo</strong></label>
+                    <InputText class="form-control" @bind-Value="agente.Codigo" />
+                    <ValidationMessage For="@(() => agente.Codigo)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Agentes/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Agente agente { get; set; } = new Agente();
+
+    private async Task Guardar()
+    {
+        var resultado = await AgenteService.Guardar(agente);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("El agente ha sido creado exitosamente.");
+            NavigationManager.NavigateTo("/Agentes/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

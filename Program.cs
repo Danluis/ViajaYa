@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ViajaYa.Components;
 using ViajaYa.Components.Account;
 using ViajaYa.Data;
+using ViajaYa.Services;
+using BlazorBootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +28,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<AgenteService>();
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
