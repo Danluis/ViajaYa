@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViajaYa.Models;
 
@@ -7,24 +8,33 @@ public class Vuelo
     [Key]
     public int VueloId { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una aerolinea.")]
-    public int AerolineaId { get; set; }
-    public Aerolinea? Aerolinea { get; set; }
-
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un destino.")]
-    public int DestinoId { get; set; }
-    public Destino? Destino { get; set; }
-
-    [Required(ErrorMessage = "El numero de vuelo es obligatorio.")]
-    [StringLength(20, ErrorMessage = "El numero de vuelo no puede superar los 20 caracteres.")]
+    [Required(ErrorMessage = "El numero de vuelo es obligatorio")]
+    [StringLength(20)]
     public string NumeroVuelo { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "La fecha es obligatoria.")]
-    public DateTime Fecha { get; set; } = DateTime.Now;
+    [Required(ErrorMessage = "Debe seleccionar una aerolinea")]
+    public int AerolineaId { get; set; }
 
-    [Range(typeof(decimal), "0.01", "999999999", ErrorMessage = "El precio debe ser mayor que cero.")]
+    [ForeignKey(nameof(AerolineaId))]
+    public Aerolinea? Aerolinea { get; set; }
+
+    [Required(ErrorMessage = "Debe seleccionar un destino")]
+    public int DestinoId { get; set; }
+
+    [ForeignKey(nameof(DestinoId))]
+    public Destino? Destino { get; set; }
+
+    [Required(ErrorMessage = "La fecha de salida es obligatoria")]
+    public DateTime FechaSalida { get; set; } = DateTime.Today;
+
+    [Required(ErrorMessage = "La fecha de llegada es obligatoria")]
+    public DateTime FechaLlegada { get; set; } = DateTime.Today;
+
+    [Required(ErrorMessage = "Los asientos disponibles son obligatorios")]
+    [Range(0, 1000, ErrorMessage = "Los asientos deben estar entre 0 y 1000")]
+    public int AsientosDisponibles { get; set; }
+
+    [Required(ErrorMessage = "El precio es obligatorio")]
+    [Range(0, 100000, ErrorMessage = "El precio debe ser mayor a 0")]
     public decimal Precio { get; set; }
-
-    [Range(0, int.MaxValue, ErrorMessage = "Los asientos disponibles no pueden ser negativos.")]
-    public int AsientosDisponibles { get; set; } = 50;
 }

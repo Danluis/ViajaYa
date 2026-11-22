@@ -1,0 +1,134 @@
+﻿@page "/Clientes/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject ClienteService ClienteService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Clientes</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Clientes</h5>
+            <a href="/Clientes/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nuevo Cliente
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="clienteId">Id</option>
+                        <option value="cedula">Cedula</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="telefono">Telefono</option>
+                        <option value="email">Email</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (clientes is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@clientes.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(c => c.ClienteId)" Title="ClienteId" Sortable="true" />
+                    <PropertyColumn Property="@(c => c.Cedula)" Title="Cedula" Sortable="true" />
+                    <PropertyColumn Property="@(c => c.Nombre)" Title="Nombre" Sortable="true" />
+                    <PropertyColumn Property="@(c => c.Telefono)" Title="Telefono" Sortable="true" />
+                    <PropertyColumn Property="@(c => c.Email)" Title="Email" Sortable="true" />
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/Clientes/Edit/{context.ClienteId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @clientes.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Cliente>? clientes;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<Cliente>> ObtenerLista(System.Linq.Expressions.Expression<Func<Cliente, bool>> criterio)
+    {
+        var resultado = await ClienteService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<Cliente>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        clientes = await ObtenerLista(c => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        if (string.IsNullOrWhiteSpace(textoBusqueda) || string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            clientes = await ObtenerLista(c => true);
+            return;
+        }
+
+        switch (criterioSeleccionado)
+        {
+            case "clienteId":
+                if (int.TryParse(textoBusqueda, out int idBuscado))
+                    clientes = await ObtenerLista(c => c.ClienteId == idBuscado);
+                else
+                    clientes = new List<Cliente>();
+                break;
+
+            case "cedula":
+                clientes = await ObtenerLista(c => c.Cedula.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "nombre":
+                clientes = await ObtenerLista(c => c.Nombre.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "telefono":
+                clientes = await ObtenerLista(c => c.Telefono.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "email":
+                clientes = await ObtenerLista(c => c.Email.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            default:
+                clientes = await ObtenerLista(c => true);
+                break;
+        }
+    }
+}

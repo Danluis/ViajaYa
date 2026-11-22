@@ -1,0 +1,104 @@
+﻿@page "/Hoteles/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject HotelService HotelService
+@inject DestinoService DestinoService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="hotel" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Hotel</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="hotel.Nombre" />
+                    <ValidationMessage For="@(() => hotel.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Direccion</strong></label>
+                    <InputText class="form-control" @bind-Value="hotel.Direccion" />
+                    <ValidationMessage For="@(() => hotel.Direccion)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Destino</strong></label>
+                    <InputSelect class="form-select" @bind-Value="hotel.DestinoId">
+                        <option value="0">Seleccione un destino</option>
+                        @foreach (var d in destinos)
+                        {
+                            <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => hotel.DestinoId)" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Categoria (estrellas)</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.Categoria" />
+                        <ValidationMessage For="@(() => hotel.Categoria)" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Habitaciones disponibles</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.HabitacionesDisponibles" />
+                        <ValidationMessage For="@(() => hotel.HabitacionesDisponibles)" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Precio por noche</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.PrecioPorNoche" />
+                        <ValidationMessage For="@(() => hotel.PrecioPorNoche)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Hoteles/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Hotel hotel { get; set; } = new Hotel();
+    private List<Destino> destinos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultadoDestinos = await DestinoService.GetList(d => true);
+        destinos = resultadoDestinos.IsSuccess ? resultadoDestinos.Value! : new List<Destino>();
+    }
+
+    private async Task Guardar()
+    {
+        if (hotel.DestinoId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un destino");
+            return;
+        }
+
+        var resultado = await HotelService.Guardar(hotel);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("El hotel ha sido creado exitosamente.");
+            NavigationManager.NavigateTo("/Hoteles/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

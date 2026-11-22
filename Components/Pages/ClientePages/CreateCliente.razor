@@ -1,0 +1,72 @@
+﻿@page "/Clientes/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject ClienteService ClienteService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="cliente" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Cliente</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Cedula</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Cedula" />
+                    <ValidationMessage For="@(() => cliente.Cedula)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Nombre" />
+                    <ValidationMessage For="@(() => cliente.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Telefono</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Telefono" />
+                    <ValidationMessage For="@(() => cliente.Telefono)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Email</strong></label>
+                    <InputText class="form-control" @bind-Value="cliente.Email" />
+                    <ValidationMessage For="@(() => cliente.Email)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Clientes/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Cliente cliente { get; set; } = new Cliente();
+
+    private async Task Guardar()
+    {
+        var resultado = await ClienteService.Guardar(cliente);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("El cliente ha sido creado exitosamente.");
+            NavigationManager.NavigateTo("/Clientes/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

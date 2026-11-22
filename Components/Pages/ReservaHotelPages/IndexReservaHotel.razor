@@ -1,0 +1,152 @@
+﻿@page "/ReservaHoteles/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject ReservaHotelService ReservaHotelService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Reservas de Hotel</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Reservas de Hotel</h5>
+            <a href="/ReservaHoteles/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nueva Reserva
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="reservaId">Id</option>
+                        <option value="cliente">Cliente</option>
+                        <option value="agente">Agente</option>
+                        <option value="estado">Estado</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Desde</label>
+                    <input type="date" class="form-control" @bind="fechaDesde" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Hasta</label>
+                    <input type="date" class="form-control" @bind="fechaHasta" />
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" @onclick="Buscar">
+                        <span class="bi bi-calendar-check"></span>
+                    </button>
+                </div>
+            </div>
+
+            @if (reservas is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@reservas.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(r => r.ReservaHotelId)" Title="Id" Sortable="true" />
+                    <TemplateColumn Title="Cliente">@context.Cliente?.Nombre</TemplateColumn>
+                    <TemplateColumn Title="Agente">@context.Agente?.Nombre</TemplateColumn>
+                    <TemplateColumn Title="Fecha">@context.FechaReserva.ToString("dd/MM/yyyy")</TemplateColumn>
+                    <PropertyColumn Property="@(r => r.Estado)" Title="Estado" Sortable="true" />
+                    <TemplateColumn Title="Total">@context.Detalles.Sum(d => d.CantidadHabitaciones * d.CantidadNoches * d.PrecioUnitario).ToString("C")</TemplateColumn>
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/ReservaHoteles/Edit/{context.ReservaHotelId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @reservas.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<ReservaHotel>? reservas;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private DateTime? fechaDesde;
+    private DateTime? fechaHasta;
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<ReservaHotel>> ObtenerLista(System.Linq.Expressions.Expression<Func<ReservaHotel, bool>> criterio)
+    {
+        var resultado = await ReservaHotelService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<ReservaHotel>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        reservas = await ObtenerLista(r => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        var lista = await ObtenerLista(r => true);
+
+        if (!string.IsNullOrWhiteSpace(textoBusqueda) && !string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            switch (criterioSeleccionado)
+            {
+                case "reservaId":
+                    if (int.TryParse(textoBusqueda, out int idBuscado))
+                        lista = lista.Where(r => r.ReservaHotelId == idBuscado).ToList();
+                    else
+                        lista = new List<ReservaHotel>();
+                    break;
+
+                case "cliente":
+                    lista = lista.Where(r => r.Cliente != null && r.Cliente.Nombre.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+
+                case "agente":
+                    lista = lista.Where(r => r.Agente != null && r.Agente.Nombre.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+
+                case "estado":
+                    lista = lista.Where(r => r.Estado.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+            }
+        }
+
+        if (fechaDesde.HasValue)
+        {
+            lista = lista.Where(r => r.FechaReserva.Date >= fechaDesde.Value.Date).ToList();
+        }
+
+        if (fechaHasta.HasValue)
+        {
+            lista = lista.Where(r => r.FechaReserva.Date <= fechaHasta.Value.Date).ToList();
+        }
+
+        reservas = lista;
+    }
+}

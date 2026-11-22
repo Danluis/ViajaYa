@@ -16,7 +16,7 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     // If you encounter a merge conflict in the line below, it means you need to
     // discard one of the migration branches and recreate its migrations on top of
     // the other branch. See https://aka.ms/efcore-docs-migrations-conflicts for more info.
-    public override string LastMigrationId => "20261122135500_RevertirCollationNocase";
+    public override string LastMigrationId => "20261122142220_AjustesFinalesModelos";
 
     protected override void BuildModel(ModelBuilder modelBuilder)
     {
@@ -375,13 +375,16 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                     .ValueGeneratedOnAdd()
                     .HasColumnType("INTEGER");
 
-                b.Property<int>("Cantidad")
+                b.Property<int>("CantidadHabitaciones")
+                    .HasColumnType("INTEGER");
+
+                b.Property<int>("CantidadNoches")
                     .HasColumnType("INTEGER");
 
                 b.Property<int>("HotelId")
                     .HasColumnType("INTEGER");
 
-                b.Property<decimal>("Precio")
+                b.Property<decimal>("PrecioUnitario")
                     .HasColumnType("TEXT");
 
                 b.Property<int>("ReservaHotelId")
@@ -402,10 +405,10 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                     .ValueGeneratedOnAdd()
                     .HasColumnType("INTEGER");
 
-                b.Property<int>("Cantidad")
+                b.Property<int>("CantidadAsientos")
                     .HasColumnType("INTEGER");
 
-                b.Property<decimal>("Precio")
+                b.Property<decimal>("PrecioUnitario")
                     .HasColumnType("TEXT");
 
                 b.Property<int>("ReservaVueloId")
@@ -429,6 +432,9 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                     .ValueGeneratedOnAdd()
                     .HasColumnType("INTEGER");
 
+                b.Property<int>("Categoria")
+                    .HasColumnType("INTEGER");
+
                 b.Property<int>("DestinoId")
                     .HasColumnType("INTEGER");
 
@@ -443,6 +449,9 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                 b.Property<string>("Nombre")
                     .IsRequired()
                     .HasMaxLength(100)
+                    .HasColumnType("TEXT");
+
+                b.Property<decimal>("PrecioPorNoche")
                     .HasColumnType("TEXT");
 
                 b.HasKey("HotelId");
@@ -464,17 +473,12 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                 b.Property<int>("ClienteId")
                     .HasColumnType("INTEGER");
 
-                b.Property<DateTime>("FechaEntrada")
-                    .HasColumnType("TEXT");
-
-                b.Property<DateTime>("FechaSalida")
-                    .HasColumnType("TEXT");
-
-                b.Property<string>("Observacion")
+                b.Property<string>("Estado")
                     .IsRequired()
+                    .HasMaxLength(20)
                     .HasColumnType("TEXT");
 
-                b.Property<decimal>("Total")
+                b.Property<DateTime>("FechaReserva")
                     .HasColumnType("TEXT");
 
                 b.HasKey("ReservaHotelId");
@@ -498,14 +502,12 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                 b.Property<int>("ClienteId")
                     .HasColumnType("INTEGER");
 
-                b.Property<DateTime>("Fecha")
-                    .HasColumnType("TEXT");
-
-                b.Property<string>("Observacion")
+                b.Property<string>("Estado")
                     .IsRequired()
+                    .HasMaxLength(20)
                     .HasColumnType("TEXT");
 
-                b.Property<decimal>("Total")
+                b.Property<DateTime>("FechaReserva")
                     .HasColumnType("TEXT");
 
                 b.HasKey("ReservaVueloId");
@@ -532,7 +534,10 @@ partial class ApplicationDbContextModelSnapshot : ModelSnapshot
                 b.Property<int>("DestinoId")
                     .HasColumnType("INTEGER");
 
-                b.Property<DateTime>("Fecha")
+                b.Property<DateTime>("FechaLlegada")
+                    .HasColumnType("TEXT");
+
+                b.Property<DateTime>("FechaSalida")
                     .HasColumnType("TEXT");
 
                 b.Property<string>("NumeroVuelo")

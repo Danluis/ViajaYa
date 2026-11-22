@@ -1,0 +1,132 @@
+﻿@page "/Aerolineas/Edit/{AerolineaId:int}"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject AerolineaService AerolineaService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Modificar Aerolinea</PageTitle>
+
+<EditForm Model="aerolinea" OnValidSubmit="@Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5>Modificar Aerolinea</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="aerolinea.Nombre" />
+                    <ValidationMessage For="@(() => aerolinea.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Pais</strong></label>
+                    <InputText class="form-control" @bind-Value="aerolinea.Pais" />
+                    <ValidationMessage For="@(() => aerolinea.Pais)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="/Aerolineas/Index" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <span class="bi bi-floppy"></span> Modificar
+                </button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                    <span class="bi bi-trash"></span> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminacion</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Esta seguro de eliminar esta aerolinea? Esta accion no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int AerolineaId { get; set; }
+
+    private Aerolinea aerolinea { get; set; } = new Aerolinea();
+    private bool mostrarModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultado = await AerolineaService.Buscar(AerolineaId);
+        if (resultado.IsSuccess && resultado.Value is not null)
+        {
+            aerolinea = resultado.Value;
+        }
+        else
+        {
+            toastService.ShowError("Aerolinea no encontrada");
+            NavigationManager.NavigateTo("/Aerolineas/Index");
+        }
+    }
+
+    private async Task Modificar()
+    {
+        var resultado = await AerolineaService.Guardar(aerolinea);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Aerolinea modificada correctamente");
+            NavigationManager.NavigateTo("/Aerolineas/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+
+    private void Eliminar()
+    {
+        mostrarModal = true;
+    }
+
+    private void CerrarModal()
+    {
+        mostrarModal = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        mostrarModal = false;
+
+        var resultado = await AerolineaService.Eliminar(aerolinea.AerolineaId);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Aerolinea eliminada correctamente");
+            NavigationManager.NavigateTo("/Aerolineas/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

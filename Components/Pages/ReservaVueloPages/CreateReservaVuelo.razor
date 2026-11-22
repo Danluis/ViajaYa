@@ -1,0 +1,208 @@
+﻿@page "/ReservaVuelos/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject ReservaVueloService ReservaVueloService
+@inject ClienteService ClienteService
+@inject AgenteService AgenteService
+@inject VueloService VueloService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Crear Reserva de Vuelo</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header text-center">
+            <h5>Crear Reserva de Vuelo</h5>
+        </div>
+
+        <div class="card-body">
+            <EditForm Model="reserva">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Cliente</strong></label>
+                        <InputSelect class="form-select" @bind-Value="reserva.ClienteId">
+                            <option value="0">Seleccione un cliente</option>
+                            @foreach (var c in clientes)
+                            {
+                                <option value="@c.ClienteId">@c.Nombre</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Agente</strong></label>
+                        <InputSelect class="form-select" @bind-Value="reserva.AgenteId">
+                            <option value="0">Seleccione un agente</option>
+                            @foreach (var a in agentes)
+                            {
+                                <option value="@a.AgenteId">@a.Nombre</option>
+                            }
+                        </InputSelect>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Fecha de reserva</strong></label>
+                        <InputDate class="form-control" @bind-Value="reserva.FechaReserva" />
+                    </div>
+                </div>
+            </EditForm>
+
+            <hr />
+            <h6>Detalle de vuelos</h6>
+
+            <div class="row g-2 mb-3">
+                <div class="col-md-4">
+                    <select class="form-select" @bind="vueloSeleccionadoId">
+                        <option value="0">Seleccione un vuelo</option>
+                        @foreach (var v in vuelos)
+                        {
+                            <option value="@v.VueloId">@v.NumeroVuelo - @v.Destino?.Ciudad (@v.AsientosDisponibles disp.)</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-md-2">
+                    <input type="number" min="1" class="form-control" placeholder="Cantidad" @bind="cantidadSeleccionada" />
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" class="form-control" placeholder="Precio unit." @bind="precioSeleccionado" />
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-outline-primary w-100" @onclick="AgregarDetalle">
+                        <span class="bi bi-plus-circle"></span> Agregar
+                    </button>
+                </div>
+            </div>
+
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>Vuelo</th>
+                        <th>Cantidad</th>
+                        <th>Precio Unit.</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var d in reserva.Detalles)
+                    {
+                        <tr>
+                            <td>@vuelos.FirstOrDefault(v => v.VueloId == d.VueloId)?.NumeroVuelo</td>
+                            <td>@d.CantidadAsientos</td>
+                            <td>@d.PrecioUnitario.ToString("C")</td>
+                            <td>@((d.CantidadAsientos * d.PrecioUnitario).ToString("C"))</td>
+                            <td>
+                                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => QuitarDetalle(d)">
+                                    <span class="bi bi-trash"></span>
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <p class="text-end"><strong>Total: @reserva.Detalles.Sum(d => d.CantidadAsientos * d.PrecioUnitario).ToString("C")</strong></p>
+        </div>
+
+        <div class="card-footer text-center mt-2">
+            <a href="/ReservaVuelos/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+            <button type="button" class="btn btn-primary bi bi-floppy" @onclick="Guardar"> Guardar</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private ReservaVuelo reserva { get; set; } = new ReservaVuelo();
+    private List<Cliente> clientes = new();
+    private List<Agente> agentes = new();
+    private List<Vuelo> vuelos = new();
+
+    private int vueloSeleccionadoId = 0;
+    private int cantidadSeleccionada = 1;
+    private decimal precioSeleccionado = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultadoClientes = await ClienteService.GetList(c => true);
+        clientes = resultadoClientes.IsSuccess ? resultadoClientes.Value! : new List<Cliente>();
+
+        var resultadoAgentes = await AgenteService.GetList(a => true);
+        agentes = resultadoAgentes.IsSuccess ? resultadoAgentes.Value! : new List<Agente>();
+
+        var resultadoVuelos = await VueloService.GetList(v => true);
+        vuelos = resultadoVuelos.IsSuccess ? resultadoVuelos.Value! : new List<Vuelo>();
+    }
+
+    private void AgregarDetalle()
+    {
+        if (vueloSeleccionadoId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un vuelo");
+            return;
+        }
+
+        if (cantidadSeleccionada <= 0)
+        {
+            toastService.ShowWarning("La cantidad debe ser mayor a 0");
+            return;
+        }
+
+        var vuelo = vuelos.FirstOrDefault(v => v.VueloId == vueloSeleccionadoId);
+        if (vuelo != null && cantidadSeleccionada > vuelo.AsientosDisponibles)
+        {
+            toastService.ShowWarning($"El vuelo {vuelo.NumeroVuelo} solo tiene {vuelo.AsientosDisponibles} asientos disponibles");
+            return;
+        }
+
+        reserva.Detalles.Add(new DetalleReservaVuelo
+        {
+            VueloId = vueloSeleccionadoId,
+            CantidadAsientos = cantidadSeleccionada,
+            PrecioUnitario = precioSeleccionado
+        });
+
+        vueloSeleccionadoId = 0;
+        cantidadSeleccionada = 1;
+        precioSeleccionado = 0;
+    }
+
+    private void QuitarDetalle(DetalleReservaVuelo detalle)
+    {
+        reserva.Detalles.Remove(detalle);
+    }
+
+    private async Task Guardar()
+    {
+        if (reserva.ClienteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un cliente");
+            return;
+        }
+
+        if (reserva.AgenteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un agente");
+            return;
+        }
+
+        if (!reserva.Detalles.Any())
+        {
+            toastService.ShowWarning("Debe agregar al menos un vuelo al detalle");
+            return;
+        }
+
+        var resultado = await ReservaVueloService.Guardar(reserva);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("La reserva ha sido creada exitosamente.");
+            NavigationManager.NavigateTo("/ReservaVuelos/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

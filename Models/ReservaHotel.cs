@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViajaYa.Models;
 
@@ -7,23 +8,24 @@ public class ReservaHotel
     [Key]
     public int ReservaHotelId { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un cliente.")]
+    [Required(ErrorMessage = "Debe seleccionar un cliente")]
     public int ClienteId { get; set; }
+
+    [ForeignKey(nameof(ClienteId))]
     public Cliente? Cliente { get; set; }
 
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un agente.")]
+    [Required(ErrorMessage = "Debe seleccionar un agente")]
     public int AgenteId { get; set; }
+
+    [ForeignKey(nameof(AgenteId))]
     public Agente? Agente { get; set; }
 
-    [Required(ErrorMessage = "La fecha de entrada es obligatoria.")]
-    public DateTime FechaEntrada { get; set; } = DateTime.Now;
+    [Required(ErrorMessage = "La fecha de reserva es obligatoria")]
+    public DateTime FechaReserva { get; set; } = DateTime.Today;
 
-    [Required(ErrorMessage = "La fecha de salida es obligatoria.")]
-    public DateTime FechaSalida { get; set; } = DateTime.Now.AddDays(1);
+    [Required]
+    [StringLength(20)]
+    public string Estado { get; set; } = "Confirmada";
 
-    public string Observacion { get; set; } = string.Empty;
-
-    public decimal Total { get; set; }
-
-    public List<DetalleReservaHotel> Detalles { get; set; } = new List<DetalleReservaHotel>();
+    public List<DetalleReservaHotel> Detalles { get; set; } = new();
 }

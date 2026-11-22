@@ -30,6 +30,13 @@ builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddScoped<AgenteService>();
+builder.Services.AddScoped<AerolineaService>();
+builder.Services.AddScoped<DestinoService>();
+builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<VueloService>();
+builder.Services.AddScoped<HotelService>();
+builder.Services.AddScoped<ReservaVueloService>();
+builder.Services.AddScoped<ReservaHotelService>();
 builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
