@@ -1,0 +1,122 @@
+﻿@page "/Destinos/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject DestinoService DestinoService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Destinos</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Destinos</h5>
+            <a href="/Destinos/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nuevo Destino
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="destinoId">Id</option>
+                        <option value="ciudad">Ciudad</option>
+                        <option value="pais">Pais</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (destinos is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@destinos.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(d => d.DestinoId)" Title="DestinoId" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Ciudad)" Title="Ciudad" Sortable="true" />
+                    <PropertyColumn Property="@(d => d.Pais)" Title="Pais" Sortable="true" />
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/Destinos/Edit/{context.DestinoId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @destinos.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Destino>? destinos;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<Destino>> ObtenerLista(System.Linq.Expressions.Expression<Func<Destino, bool>> criterio)
+    {
+        var resultado = await DestinoService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<Destino>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        destinos = await ObtenerLista(d => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        if (string.IsNullOrWhiteSpace(textoBusqueda) || string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            destinos = await ObtenerLista(d => true);
+            return;
+        }
+
+        switch (criterioSeleccionado)
+        {
+            case "destinoId":
+                if (int.TryParse(textoBusqueda, out int idBuscado))
+                    destinos = await ObtenerLista(d => d.DestinoId == idBuscado);
+                else
+                    destinos = new List<Destino>();
+                break;
+
+            case "ciudad":
+                destinos = await ObtenerLista(d => d.Ciudad.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "pais":
+                destinos = await ObtenerLista(d => d.Pais.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            default:
+                destinos = await ObtenerLista(d => true);
+                break;
+        }
+    }
+}

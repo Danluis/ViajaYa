@@ -1,0 +1,122 @@
+﻿@page "/Agentes/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject AgenteService AgenteService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Agentes</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Agentes</h5>
+            <a href="/Agentes/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nuevo Agente
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="agenteId">Id</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="codigo">Codigo</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (agentes is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@agentes.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(a => a.AgenteId)" Title="AgenteId" Sortable="true" />
+                    <PropertyColumn Property="@(a => a.Nombre)" Title="Nombre" Sortable="true" />
+                    <PropertyColumn Property="@(a => a.Codigo)" Title="Codigo" Sortable="true" />
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/Agentes/Edit/{context.AgenteId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @agentes.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Agente>? agentes;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<Agente>> ObtenerLista(System.Linq.Expressions.Expression<Func<Agente, bool>> criterio)
+    {
+        var resultado = await AgenteService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<Agente>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        agentes = await ObtenerLista(a => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        if (string.IsNullOrWhiteSpace(textoBusqueda) || string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            agentes = await ObtenerLista(a => true);
+            return;
+        }
+
+        switch (criterioSeleccionado)
+        {
+            case "agenteId":
+                if (int.TryParse(textoBusqueda, out int idBuscado))
+                    agentes = await ObtenerLista(a => a.AgenteId == idBuscado);
+                else
+                    agentes = new List<Agente>();
+                break;
+
+            case "nombre":
+                agentes = await ObtenerLista(a => a.Nombre.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "codigo":
+                agentes = await ObtenerLista(a => a.Codigo.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            default:
+                agentes = await ObtenerLista(a => true);
+                break;
+        }
+    }
+}

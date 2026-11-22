@@ -1,0 +1,66 @@
+﻿@page "/Destinos/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject DestinoService DestinoService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="destino" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Destino</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Ciudad</strong></label>
+                    <InputText class="form-control" @bind-Value="destino.Ciudad" />
+                    <ValidationMessage For="@(() => destino.Ciudad)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Pais</strong></label>
+                    <InputText class="form-control" @bind-Value="destino.Pais" />
+                    <ValidationMessage For="@(() => destino.Pais)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Descripcion</strong></label>
+                    <InputTextArea class="form-control" @bind-Value="destino.Descripcion" />
+                    <ValidationMessage For="@(() => destino.Descripcion)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Destinos/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Destino destino { get; set; } = new Destino();
+
+    private async Task Guardar()
+    {
+        var resultado = await DestinoService.Guardar(destino);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("El destino ha sido creado exitosamente.");
+            NavigationManager.NavigateTo("/Destinos/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

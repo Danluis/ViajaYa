@@ -1,0 +1,60 @@
+﻿@page "/Aerolineas/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject AerolineaService AerolineaService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="aerolinea" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Aerolinea</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="aerolinea.Nombre" />
+                    <ValidationMessage For="@(() => aerolinea.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Pais</strong></label>
+                    <InputText class="form-control" @bind-Value="aerolinea.Pais" />
+                    <ValidationMessage For="@(() => aerolinea.Pais)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Aerolineas/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Aerolinea aerolinea { get; set; } = new Aerolinea();
+
+    private async Task Guardar()
+    {
+        var resultado = await AerolineaService.Guardar(aerolinea);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("La aerolinea ha sido creada exitosamente.");
+            NavigationManager.NavigateTo("/Aerolineas/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

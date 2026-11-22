@@ -1,0 +1,132 @@
+﻿@page "/Agentes/Edit/{AgenteId:int}"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject AgenteService AgenteService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Modificar Agente</PageTitle>
+
+<EditForm Model="agente" OnValidSubmit="@Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5>Modificar Agente</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="agente.Nombre" />
+                    <ValidationMessage For="@(() => agente.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Codigo</strong></label>
+                    <InputText class="form-control" @bind-Value="agente.Codigo" />
+                    <ValidationMessage For="@(() => agente.Codigo)" />
+                </div>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="/Agentes/Index" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <span class="bi bi-floppy"></span> Modificar
+                </button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                    <span class="bi bi-trash"></span> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminacion</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Esta seguro de eliminar este agente? Esta accion no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int AgenteId { get; set; }
+
+    private Agente agente { get; set; } = new Agente();
+    private bool mostrarModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultado = await AgenteService.Buscar(AgenteId);
+        if (resultado.IsSuccess && resultado.Value is not null)
+        {
+            agente = resultado.Value;
+        }
+        else
+        {
+            toastService.ShowError("Agente no encontrado");
+            NavigationManager.NavigateTo("/Agentes/Index");
+        }
+    }
+
+    private async Task Modificar()
+    {
+        var resultado = await AgenteService.Guardar(agente);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Agente modificado correctamente");
+            NavigationManager.NavigateTo("/Agentes/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+
+    private void Eliminar()
+    {
+        mostrarModal = true;
+    }
+
+    private void CerrarModal()
+    {
+        mostrarModal = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        mostrarModal = false;
+
+        var resultado = await AgenteService.Eliminar(agente.AgenteId);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Agente eliminado correctamente");
+            NavigationManager.NavigateTo("/Agentes/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

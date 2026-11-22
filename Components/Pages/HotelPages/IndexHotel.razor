@@ -1,0 +1,131 @@
+﻿@page "/Hoteles/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject HotelService HotelService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Hoteles</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Hoteles</h5>
+            <a href="/Hoteles/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nuevo Hotel
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="hotelId">Id</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="direccion">Direccion</option>
+                        <option value="destino">Destino</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (hoteles is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@hoteles.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(h => h.HotelId)" Title="HotelId" Sortable="true" />
+                    <PropertyColumn Property="@(h => h.Nombre)" Title="Nombre" Sortable="true" />
+                    <PropertyColumn Property="@(h => h.Direccion)" Title="Direccion" Sortable="true" />
+                    <TemplateColumn Title="Destino">@($"{context.Destino?.Ciudad}, {context.Destino?.Pais}")</TemplateColumn>
+                    <PropertyColumn Property="@(h => h.Categoria)" Title="Categoria" Sortable="true" />
+                    <PropertyColumn Property="@(h => h.HabitacionesDisponibles)" Title="Habitaciones" Sortable="true" />
+                    <TemplateColumn Title="Precio/Noche">@context.PrecioPorNoche.ToString("C")</TemplateColumn>
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/Hoteles/Edit/{context.HotelId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @hoteles.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Hotel>? hoteles;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<Hotel>> ObtenerLista(System.Linq.Expressions.Expression<Func<Hotel, bool>> criterio)
+    {
+        var resultado = await HotelService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<Hotel>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        hoteles = await ObtenerLista(h => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        if (string.IsNullOrWhiteSpace(textoBusqueda) || string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            hoteles = await ObtenerLista(h => true);
+            return;
+        }
+
+        switch (criterioSeleccionado)
+        {
+            case "hotelId":
+                if (int.TryParse(textoBusqueda, out int idBuscado))
+                    hoteles = await ObtenerLista(h => h.HotelId == idBuscado);
+                else
+                    hoteles = new List<Hotel>();
+                break;
+
+            case "nombre":
+                hoteles = await ObtenerLista(h => h.Nombre.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "direccion":
+                hoteles = await ObtenerLista(h => h.Direccion.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            case "destino":
+                hoteles = await ObtenerLista(h => h.Destino != null && h.Destino.Ciudad.ToLower().Contains(textoBusqueda.ToLower()));
+                break;
+
+            default:
+                hoteles = await ObtenerLista(h => true);
+                break;
+        }
+    }
+}

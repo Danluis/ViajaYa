@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using ViajaYa.Components;
 using ViajaYa.Components.Account;
 using ViajaYa.Data;
+using ViajaYa.Services;
+using BlazorBootstrap;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +25,19 @@ builder.Services.AddAuthentication(options =>
     .AddIdentityCookies();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
     options.UseSqlite(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddScoped<AgenteService>();
+builder.Services.AddScoped<AerolineaService>();
+builder.Services.AddScoped<DestinoService>();
+builder.Services.AddScoped<ClienteService>();
+builder.Services.AddScoped<VueloService>();
+builder.Services.AddScoped<HotelService>();
+builder.Services.AddScoped<ReservaVueloService>();
+builder.Services.AddScoped<ReservaHotelService>();
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
 {
@@ -83,7 +95,5 @@ using (var scope = app.Services.CreateScope())
         await userManager.AddToRoleAsync(adminUser, "Administrador");
     }
 }
-
-app.Run();
 
 app.Run();

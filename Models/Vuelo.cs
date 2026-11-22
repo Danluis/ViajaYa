@@ -1,41 +1,40 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ViajaYa.Models;
 
 public class Vuelo
 {
+    [Key]
     public int VueloId { get; set; }
 
-    [Required(ErrorMessage = "El origen es obligatorio.")]
-    [StringLength(100, MinimumLength = 2, ErrorMessage = "El origen debe tener entre 2 y 100 caracteres.")]
-    public string Origen { get; set; } = string.Empty;
+    [Required(ErrorMessage = "El numero de vuelo es obligatorio")]
+    [StringLength(20)]
+    public string NumeroVuelo { get; set; } = string.Empty;
 
-    [Required(ErrorMessage = "El destino es obligatorio.")]
-    [StringLength(100, MinimumLength = 2, ErrorMessage = "El destino debe tener entre 2 y 100 caracteres.")]
-    public string Destino { get; set; } = string.Empty;
+    [Required(ErrorMessage = "Debe seleccionar una aerolinea")]
+    public int AerolineaId { get; set; }
 
-    [Required(ErrorMessage = "La fecha es obligatoria.")]
-    [DataType(DataType.Date)]
-    public DateTime Fecha { get; set; }
+    [ForeignKey(nameof(AerolineaId))]
+    public Aerolinea? Aerolinea { get; set; }
 
-    [Required(ErrorMessage = "La hora de salida es obligatoria.")]
-    public TimeSpan HoraSalida { get; set; }
+    [Required(ErrorMessage = "Debe seleccionar un destino")]
+    public int DestinoId { get; set; }
 
-    [Required(ErrorMessage = "La hora de llegada es obligatoria.")]
-    public TimeSpan HoraLlegada { get; set; }
+    [ForeignKey(nameof(DestinoId))]
+    public Destino? Destino { get; set; }
 
-    [Range(1, 1440, ErrorMessage = "El tiempo estimado debe estar entre 1 y 1440 minutos.")]
-    public int TiempoEstimado { get; set; }
+    [Required(ErrorMessage = "La fecha de salida es obligatoria")]
+    public DateTime FechaSalida { get; set; } = DateTime.Today;
 
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar un piloto.")]
-    public int PilotoId { get; set; }
+    [Required(ErrorMessage = "La fecha de llegada es obligatoria")]
+    public DateTime FechaLlegada { get; set; } = DateTime.Today;
 
-    [Range(1, int.MaxValue, ErrorMessage = "Debes seleccionar una aeronave.")]
-    public int AeronaveId { get; set; }
+    [Required(ErrorMessage = "Los asientos disponibles son obligatorios")]
+    [Range(0, 1000, ErrorMessage = "Los asientos deben estar entre 0 y 1000")]
+    public int AsientosDisponibles { get; set; }
 
-    public Piloto? Piloto { get; set; }
-
-    public Aeronave? Aeronave { get; set; }
-
-    public ICollection<Reserva> Reservas { get; set; } = new List<Reserva>();
+    [Required(ErrorMessage = "El precio es obligatorio")]
+    [Range(0, 100000, ErrorMessage = "El precio debe ser mayor a 0")]
+    public decimal Precio { get; set; }
 }

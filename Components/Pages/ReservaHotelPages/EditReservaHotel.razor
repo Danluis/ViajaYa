@@ -1,0 +1,282 @@
+﻿@page "/ReservaHoteles/Edit/{ReservaHotelId:int}"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject ReservaHotelService ReservaHotelService
+@inject ClienteService ClienteService
+@inject AgenteService AgenteService
+@inject HotelService HotelService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Modificar Reserva de Hotel</PageTitle>
+
+<div class="container">
+    <div class="card shadow-lg">
+        <div class="card-header">
+            <h5>Modificar Reserva de Hotel</h5>
+        </div>
+
+        <div class="card-body">
+            @if (reserva is not null)
+            {
+                <EditForm Model="reserva">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label"><strong>Cliente</strong></label>
+                            <InputSelect class="form-select" @bind-Value="reserva.ClienteId">
+                                <option value="0">Seleccione un cliente</option>
+                                @foreach (var c in clientes)
+                                {
+                                    <option value="@c.ClienteId">@c.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label"><strong>Agente</strong></label>
+                            <InputSelect class="form-select" @bind-Value="reserva.AgenteId">
+                                <option value="0">Seleccione un agente</option>
+                                @foreach (var a in agentes)
+                                {
+                                    <option value="@a.AgenteId">@a.Nombre</option>
+                                }
+                            </InputSelect>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label"><strong>Fecha de reserva</strong></label>
+                            <InputDate class="form-control" @bind-Value="reserva.FechaReserva" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label"><strong>Estado</strong></label>
+                            <InputSelect class="form-select" @bind-Value="reserva.Estado">
+                                <option value="Confirmada">Confirmada</option>
+                                <option value="Cancelada">Cancelada</option>
+                            </InputSelect>
+                        </div>
+                    </div>
+                </EditForm>
+
+                <hr />
+                <h6>Detalle de hoteles</h6>
+
+                <div class="row g-2 mb-3">
+                    <div class="col-md-3">
+                        <select class="form-select" @bind="hotelSeleccionadoId">
+                            <option value="0">Seleccione un hotel</option>
+                            @foreach (var h in hoteles)
+                            {
+                                <option value="@h.HotelId">@h.Nombre - @h.Destino?.Ciudad (@h.HabitacionesDisponibles disp.)</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" min="1" class="form-control" placeholder="Habitaciones" @bind="cantidadHabSeleccionada" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" min="1" class="form-control" placeholder="Noches" @bind="cantidadNochesSeleccionada" />
+                    </div>
+                    <div class="col-md-2">
+                        <input type="number" step="0.01" class="form-control" placeholder="Precio/noche" @bind="precioSeleccionado" />
+                    </div>
+                    <div class="col-md-2">
+                        <button type="button" class="btn btn-outline-primary w-100" @onclick="AgregarDetalle">
+                            <span class="bi bi-plus-circle"></span> Agregar
+                        </button>
+                    </div>
+                </div>
+
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Hotel</th>
+                            <th>Habitaciones</th>
+                            <th>Noches</th>
+                            <th>Precio/Noche</th>
+                            <th>Subtotal</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var d in reserva.Detalles)
+                        {
+                            <tr>
+                                <td>@hoteles.FirstOrDefault(h => h.HotelId == d.HotelId)?.Nombre</td>
+                                <td>@d.CantidadHabitaciones</td>
+                                <td>@d.CantidadNoches</td>
+                                <td>@d.PrecioUnitario.ToString("C")</td>
+                                <td>@((d.CantidadHabitaciones * d.CantidadNoches * d.PrecioUnitario).ToString("C"))</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => QuitarDetalle(d)">
+                                        <span class="bi bi-trash"></span>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <p class="text-end"><strong>Total: @reserva.Detalles.Sum(d => d.CantidadHabitaciones * d.CantidadNoches * d.PrecioUnitario).ToString("C")</strong></p>
+            }
+        </div>
+
+        <div class="card-footer text-center">
+            <a href="/ReservaHoteles/Index" class="btn btn-secondary">
+                <span class="bi bi-arrow-left"></span> Volver
+            </a>
+            <button type="button" class="btn btn-primary" @onclick="Modificar">
+                <span class="bi bi-floppy"></span> Modificar
+            </button>
+            <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                <span class="bi bi-trash"></span> Eliminar
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminacion</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Esta seguro de eliminar esta reserva? Las habitaciones se restauraran automaticamente. Esta accion no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int ReservaHotelId { get; set; }
+
+    private ReservaHotel? reserva;
+    private List<Cliente> clientes = new();
+    private List<Agente> agentes = new();
+    private List<Hotel> hoteles = new();
+    private bool mostrarModal = false;
+
+    private int hotelSeleccionadoId = 0;
+    private int cantidadHabSeleccionada = 1;
+    private int cantidadNochesSeleccionada = 1;
+    private decimal precioSeleccionado = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultadoClientes = await ClienteService.GetList(c => true);
+        clientes = resultadoClientes.IsSuccess ? resultadoClientes.Value! : new List<Cliente>();
+
+        var resultadoAgentes = await AgenteService.GetList(a => true);
+        agentes = resultadoAgentes.IsSuccess ? resultadoAgentes.Value! : new List<Agente>();
+
+        var resultadoHoteles = await HotelService.GetList(h => true);
+        hoteles = resultadoHoteles.IsSuccess ? resultadoHoteles.Value! : new List<Hotel>();
+
+        var resultado = await ReservaHotelService.Buscar(ReservaHotelId);
+        if (resultado.IsSuccess && resultado.Value is not null)
+        {
+            reserva = resultado.Value;
+        }
+        else
+        {
+            toastService.ShowError("Reserva no encontrada");
+            NavigationManager.NavigateTo("/ReservaHoteles/Index");
+        }
+    }
+
+    private void AgregarDetalle()
+    {
+        if (reserva is null) return;
+
+        if (hotelSeleccionadoId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un hotel");
+            return;
+        }
+
+        if (cantidadHabSeleccionada <= 0 || cantidadNochesSeleccionada <= 0)
+        {
+            toastService.ShowWarning("La cantidad de habitaciones y noches debe ser mayor a 0");
+            return;
+        }
+
+        reserva.Detalles.Add(new DetalleReservaHotel
+        {
+            HotelId = hotelSeleccionadoId,
+            CantidadHabitaciones = cantidadHabSeleccionada,
+            CantidadNoches = cantidadNochesSeleccionada,
+            PrecioUnitario = precioSeleccionado
+        });
+
+        hotelSeleccionadoId = 0;
+        cantidadHabSeleccionada = 1;
+        cantidadNochesSeleccionada = 1;
+        precioSeleccionado = 0;
+    }
+
+    private void QuitarDetalle(DetalleReservaHotel detalle)
+    {
+        reserva?.Detalles.Remove(detalle);
+    }
+
+    private async Task Modificar()
+    {
+        if (reserva is null) return;
+
+        if (!reserva.Detalles.Any())
+        {
+            toastService.ShowWarning("Debe tener al menos un hotel en el detalle");
+            return;
+        }
+
+        var resultado = await ReservaHotelService.Guardar(reserva);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Reserva modificada correctamente");
+            NavigationManager.NavigateTo("/ReservaHoteles/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+
+    private void Eliminar()
+    {
+        mostrarModal = true;
+    }
+
+    private void CerrarModal()
+    {
+        mostrarModal = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        mostrarModal = false;
+        if (reserva is null) return;
+
+        var resultado = await ReservaHotelService.Eliminar(reserva.ReservaHotelId);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Reserva eliminada correctamente");
+            NavigationManager.NavigateTo("/ReservaHoteles/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

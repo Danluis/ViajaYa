@@ -1,0 +1,167 @@
+﻿@page "/Hoteles/Edit/{HotelId:int}"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject HotelService HotelService
+@inject DestinoService DestinoService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Modificar Hotel</PageTitle>
+
+<EditForm Model="hotel" OnValidSubmit="@Modificar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header">
+                <h5>Modificar Hotel</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Nombre</strong></label>
+                    <InputText class="form-control" @bind-Value="hotel.Nombre" />
+                    <ValidationMessage For="@(() => hotel.Nombre)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Direccion</strong></label>
+                    <InputText class="form-control" @bind-Value="hotel.Direccion" />
+                    <ValidationMessage For="@(() => hotel.Direccion)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Destino</strong></label>
+                    <InputSelect class="form-select" @bind-Value="hotel.DestinoId">
+                        <option value="0">Seleccione un destino</option>
+                        @foreach (var d in destinos)
+                        {
+                            <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => hotel.DestinoId)" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Categoria (estrellas)</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.Categoria" />
+                        <ValidationMessage For="@(() => hotel.Categoria)" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Habitaciones disponibles</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.HabitacionesDisponibles" />
+                        <ValidationMessage For="@(() => hotel.HabitacionesDisponibles)" />
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label class="form-label"><strong>Precio por noche</strong></label>
+                        <InputNumber class="form-control" @bind-Value="hotel.PrecioPorNoche" />
+                        <ValidationMessage For="@(() => hotel.PrecioPorNoche)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-center">
+                <a href="/Hoteles/Index" class="btn btn-secondary">
+                    <span class="bi bi-arrow-left"></span> Volver
+                </a>
+                <button type="submit" class="btn btn-primary">
+                    <span class="bi bi-floppy"></span> Modificar
+                </button>
+                <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                    <span class="bi bi-trash"></span> Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar eliminacion</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Esta seguro de eliminar este hotel? Esta accion no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int HotelId { get; set; }
+
+    private Hotel hotel { get; set; } = new Hotel();
+    private List<Destino> destinos = new();
+    private bool mostrarModal = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultadoDestinos = await DestinoService.GetList(d => true);
+        destinos = resultadoDestinos.IsSuccess ? resultadoDestinos.Value! : new List<Destino>();
+
+        var resultado = await HotelService.Buscar(HotelId);
+        if (resultado.IsSuccess && resultado.Value is not null)
+        {
+            hotel = resultado.Value;
+        }
+        else
+        {
+            toastService.ShowError("Hotel no encontrado");
+            NavigationManager.NavigateTo("/Hoteles/Index");
+        }
+    }
+
+    private async Task Modificar()
+    {
+        var resultado = await HotelService.Guardar(hotel);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Hotel modificado correctamente");
+            NavigationManager.NavigateTo("/Hoteles/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+
+    private void Eliminar()
+    {
+        mostrarModal = true;
+    }
+
+    private void CerrarModal()
+    {
+        mostrarModal = false;
+    }
+
+    private async Task ConfirmarEliminar()
+    {
+        mostrarModal = false;
+
+        var resultado = await HotelService.Eliminar(hotel.HotelId);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("Hotel eliminado correctamente");
+            NavigationManager.NavigateTo("/Hoteles/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

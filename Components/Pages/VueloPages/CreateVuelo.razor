@@ -1,0 +1,129 @@
+﻿@page "/Vuelos/Create"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using ViajaYa.Extensors
+@inject VueloService VueloService
+@inject AerolineaService AerolineaService
+@inject DestinoService DestinoService
+@inject ToastService toastService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Create</PageTitle>
+<EditForm Model="vuelo" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="container">
+        <div class="card shadow-lg">
+            <div class="card-header text-center">
+                <h5>Crear Vuelo</h5>
+            </div>
+
+            <div class="card-body">
+                <div class="mb-3">
+                    <label class="form-label"><strong>Numero de vuelo</strong></label>
+                    <InputText class="form-control" @bind-Value="vuelo.NumeroVuelo" />
+                    <ValidationMessage For="@(() => vuelo.NumeroVuelo)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Aerolinea</strong></label>
+                    <InputSelect class="form-select" @bind-Value="vuelo.AerolineaId">
+                        <option value="0">Seleccione una aerolinea</option>
+                        @foreach (var a in aerolineas)
+                        {
+                            <option value="@a.AerolineaId">@a.Nombre</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => vuelo.AerolineaId)" />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label"><strong>Destino</strong></label>
+                    <InputSelect class="form-select" @bind-Value="vuelo.DestinoId">
+                        <option value="0">Seleccione un destino</option>
+                        @foreach (var d in destinos)
+                        {
+                            <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
+                        }
+                    </InputSelect>
+                    <ValidationMessage For="@(() => vuelo.DestinoId)" />
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Fecha de salida</strong></label>
+                        <InputDate class="form-control" @bind-Value="vuelo.FechaSalida" />
+                        <ValidationMessage For="@(() => vuelo.FechaSalida)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Fecha de llegada</strong></label>
+                        <InputDate class="form-control" @bind-Value="vuelo.FechaLlegada" />
+                        <ValidationMessage For="@(() => vuelo.FechaLlegada)" />
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Asientos disponibles</strong></label>
+                        <InputNumber class="form-control" @bind-Value="vuelo.AsientosDisponibles" />
+                        <ValidationMessage For="@(() => vuelo.AsientosDisponibles)" />
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label"><strong>Precio</strong></label>
+                        <InputNumber class="form-control" @bind-Value="vuelo.Precio" />
+                        <ValidationMessage For="@(() => vuelo.Precio)" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer text-center mt-2">
+                <a href="/Vuelos/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
+                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
+            </div>
+        </div>
+    </div>
+</EditForm>
+
+@code {
+    private Vuelo vuelo { get; set; } = new Vuelo();
+    private List<Aerolinea> aerolineas = new();
+    private List<Destino> destinos = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var resultadoAerolineas = await AerolineaService.GetList(a => true);
+        aerolineas = resultadoAerolineas.IsSuccess ? resultadoAerolineas.Value! : new List<Aerolinea>();
+
+        var resultadoDestinos = await DestinoService.GetList(d => true);
+        destinos = resultadoDestinos.IsSuccess ? resultadoDestinos.Value! : new List<Destino>();
+    }
+
+    private async Task Guardar()
+    {
+        if (vuelo.AerolineaId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar una aerolinea");
+            return;
+        }
+
+        if (vuelo.DestinoId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un destino");
+            return;
+        }
+
+        var resultado = await VueloService.Guardar(vuelo);
+
+        resultado.OnSuccess(() =>
+        {
+            toastService.ShowSuccess("El vuelo ha sido creado exitosamente.");
+            NavigationManager.NavigateTo("/Vuelos/Index");
+        });
+
+        resultado.OnFailure(() =>
+        {
+            toastService.ShowError(resultado.Error.Description);
+        });
+    }
+}

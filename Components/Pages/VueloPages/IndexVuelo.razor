@@ -1,0 +1,154 @@
+﻿@page "/Vuelos/Index"
+@using ViajaYa.Models
+@using ViajaYa.Services
+@using Microsoft.AspNetCore.Components.QuickGrid
+@inject VueloService VueloService
+@rendermode InteractiveServer
+
+<PageTitle>Consulta de Vuelos</PageTitle>
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Consulta de Vuelos</h5>
+            <a href="/Vuelos/Create" class="btn btn-primary">
+                <span class="bi bi-plus-circle"></span> Nuevo Vuelo
+            </a>
+        </div>
+        <div class="card-body">
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+                    <select class="form-select" @bind="criterioSeleccionado">
+                        <option value="">Elija una opción</option>
+                        <option value="vueloId">Id</option>
+                        <option value="numeroVuelo">Numero de vuelo</option>
+                        <option value="aerolinea">Aerolinea</option>
+                        <option value="destino">Destino</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Busqueda</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Buscar"
+                               @bind="textoBusqueda" @bind:event="oninput"
+                               @onkeyup="ManejarTecla" />
+                        <button class="btn btn-outline-secondary" @onclick="Buscar">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Desde</label>
+                    <input type="date" class="form-control" @bind="fechaDesde" />
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Hasta</label>
+                    <input type="date" class="form-control" @bind="fechaHasta" />
+                </div>
+                <div class="col-md-1 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" @onclick="Buscar">
+                        <span class="bi bi-calendar-check"></span>
+                    </button>
+                </div>
+            </div>
+
+            @if (vuelos is null)
+            {
+                <p>Cargando...</p>
+            }
+            else
+            {
+                <QuickGrid Items="@vuelos.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
+                    <PropertyColumn Property="@(v => v.VueloId)" Title="VueloId" Sortable="true" />
+                    <PropertyColumn Property="@(v => v.NumeroVuelo)" Title="Numero" Sortable="true" />
+                    <TemplateColumn Title="Aerolinea">@context.Aerolinea?.Nombre</TemplateColumn>
+                    <TemplateColumn Title="Destino">@($"{context.Destino?.Ciudad}, {context.Destino?.Pais}")</TemplateColumn>
+                    <TemplateColumn Title="Salida">@context.FechaSalida.ToString("dd/MM/yyyy")</TemplateColumn>
+                    <TemplateColumn Title="Llegada">@context.FechaLlegada.ToString("dd/MM/yyyy")</TemplateColumn>
+                    <PropertyColumn Property="@(v => v.AsientosDisponibles)" Title="Asientos" Sortable="true" />
+                    <TemplateColumn Title="Precio">@context.Precio.ToString("C")</TemplateColumn>
+                    <TemplateColumn Title="Opciones">
+                        <a href="@($"/Vuelos/Edit/{context.VueloId}")" class="btn btn-sm btn-outline-primary">
+                            <span class="bi bi-pencil-square"></span> Editar
+                        </a>
+                    </TemplateColumn>
+                </QuickGrid>
+
+                <Paginator State="@paginacion" />
+
+                <p class="text-muted">Cantidad: @vuelos.Count</p>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<Vuelo>? vuelos;
+    private string criterioSeleccionado = "";
+    private string textoBusqueda = "";
+    private DateTime? fechaDesde;
+    private DateTime? fechaHasta;
+    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
+
+    private async Task<List<Vuelo>> ObtenerLista(System.Linq.Expressions.Expression<Func<Vuelo, bool>> criterio)
+    {
+        var resultado = await VueloService.GetList(criterio);
+        return resultado.IsSuccess ? resultado.Value! : new List<Vuelo>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        vuelos = await ObtenerLista(v => true);
+    }
+
+    private async Task ManejarTecla(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await Buscar();
+        }
+    }
+
+    private async Task Buscar()
+    {
+        var lista = await ObtenerLista(v => true);
+
+        if (!string.IsNullOrWhiteSpace(textoBusqueda) && !string.IsNullOrEmpty(criterioSeleccionado))
+        {
+            switch (criterioSeleccionado)
+            {
+                case "vueloId":
+                    if (int.TryParse(textoBusqueda, out int idBuscado))
+                        lista = lista.Where(v => v.VueloId == idBuscado).ToList();
+                    else
+                        lista = new List<Vuelo>();
+                    break;
+
+                case "numeroVuelo":
+                    lista = lista.Where(v => v.NumeroVuelo.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+
+                case "aerolinea":
+                    lista = lista.Where(v => v.Aerolinea != null && v.Aerolinea.Nombre.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+
+                case "destino":
+                    lista = lista.Where(v => v.Destino != null && v.Destino.Ciudad.ToLower().Contains(textoBusqueda.ToLower())).ToList();
+                    break;
+            }
+        }
+
+        if (fechaDesde.HasValue)
+        {
+            lista = lista.Where(v => v.FechaSalida.Date >= fechaDesde.Value.Date).ToList();
+        }
+
+        if (fechaHasta.HasValue)
+        {
+            lista = lista.Where(v => v.FechaSalida.Date <= fechaHasta.Value.Date).ToList();
+        }
+
+        vuelos = lista;
+    }
+}
