@@ -8,7 +8,7 @@
 @inject VueloService VueloService
 @inject ToastService toastService
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer
+
 
 <PageTitle>Crear Reserva de Vuelo</PageTitle>
 
@@ -52,22 +52,19 @@
             <h6>Detalle de vuelos</h6>
 
             <div class="row g-2 mb-3">
-                <div class="col-md-4">
+                <div class="col-md-5">
                     <select class="form-select" @bind="vueloSeleccionadoId">
                         <option value="0">Seleccione un vuelo</option>
                         @foreach (var v in vuelos)
                         {
-                            <option value="@v.VueloId">@v.NumeroVuelo - @v.Destino?.Ciudad (@v.AsientosDisponibles disp.)</option>
+                            <option value="@v.VueloId">@v.NumeroVuelo - @v.Destino?.Ciudad (@v.AsientosDisponibles disp. - @v.Precio.ToString("C"))</option>
                         }
                     </select>
                 </div>
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <input type="number" min="1" class="form-control" placeholder="Cantidad" @bind="cantidadSeleccionada" />
                 </div>
-                <div class="col-md-2">
-                    <input type="number" step="0.01" class="form-control" placeholder="Precio unit." @bind="precioSeleccionado" />
-                </div>
-                <div class="col-md-2">
+                <div class="col-md-4">
                     <button type="button" class="btn btn-outline-primary w-100" @onclick="AgregarDetalle">
                         <span class="bi bi-plus-circle"></span> Agregar
                     </button>
@@ -93,7 +90,7 @@
                             <td>@d.PrecioUnitario.ToString("C")</td>
                             <td>@((d.CantidadAsientos * d.PrecioUnitario).ToString("C"))</td>
                             <td>
-                                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => QuitarDetalle(d)">
+                                <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => AbrirModalQuitar(d)" title="Quitar y cargar en el formulario">
                                     <span class="bi bi-trash"></span>
                                 </button>
                             </td>
@@ -112,6 +109,24 @@
     </div>
 </div>
 
+<div class="modal fade @(mostrarModalQuitar ? "show d-block" : "")" tabindex="-1" style="@(mostrarModalQuitar ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModalQuitar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Desea quitar este vuelo del detalle? Sus valores se cargaran en el formulario para que pueda ajustarlos.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModalQuitar">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarQuitarDetalle">Quitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @code {
     private ReservaVuelo reserva { get; set; } = new ReservaVuelo();
     private List<Cliente> clientes = new();
@@ -120,7 +135,9 @@
 
     private int vueloSeleccionadoId = 0;
     private int cantidadSeleccionada = 1;
-    private decimal precioSeleccionado = 0;
+
+    private bool mostrarModalQuitar = false;
+    private DetalleReservaVuelo? detalleAQuitar;
 
     protected override async Task OnInitializedAsync()
     {
@@ -136,6 +153,18 @@
 
     private void AgregarDetalle()
     {
+        if (reserva.ClienteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un cliente antes de agregar un vuelo");
+            return;
+        }
+
+        if (reserva.AgenteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un agente antes de agregar un vuelo");
+            return;
+        }
+
         if (vueloSeleccionadoId == 0)
         {
             toastService.ShowWarning("Debe seleccionar un vuelo");
@@ -149,7 +178,13 @@
         }
 
         var vuelo = vuelos.FirstOrDefault(v => v.VueloId == vueloSeleccionadoId);
-        if (vuelo != null && cantidadSeleccionada > vuelo.AsientosDisponibles)
+        if (vuelo is null)
+        {
+            toastService.ShowWarning("El vuelo seleccionado ya no existe");
+            return;
+        }
+
+        if (cantidadSeleccionada > vuelo.AsientosDisponibles)
         {
             toastService.ShowWarning($"El vuelo {vuelo.NumeroVuelo} solo tiene {vuelo.AsientosDisponibles} asientos disponibles");
             return;
@@ -159,17 +194,36 @@
         {
             VueloId = vueloSeleccionadoId,
             CantidadAsientos = cantidadSeleccionada,
-            PrecioUnitario = precioSeleccionado
+            PrecioUnitario = vuelo.Precio
         });
 
         vueloSeleccionadoId = 0;
         cantidadSeleccionada = 1;
-        precioSeleccionado = 0;
     }
 
-    private void QuitarDetalle(DetalleReservaVuelo detalle)
+    private void AbrirModalQuitar(DetalleReservaVuelo detalle)
     {
-        reserva.Detalles.Remove(detalle);
+        detalleAQuitar = detalle;
+        mostrarModalQuitar = true;
+    }
+
+    private void CerrarModalQuitar()
+    {
+        mostrarModalQuitar = false;
+        detalleAQuitar = null;
+    }
+
+    private void ConfirmarQuitarDetalle()
+    {
+        if (detalleAQuitar is null) return;
+
+        vueloSeleccionadoId = detalleAQuitar.VueloId;
+        cantidadSeleccionada = detalleAQuitar.CantidadAsientos;
+
+        reserva.Detalles.Remove(detalleAQuitar);
+
+        mostrarModalQuitar = false;
+        detalleAQuitar = null;
     }
 
     private async Task Guardar()

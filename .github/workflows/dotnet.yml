@@ -1,0 +1,96 @@
+name: 'Build and Test'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    steps:
+      # 1) Descarga el codigo del repositorio con todo el historial,
+      # necesario para que el analisis de SonarCloud pueda detectar
+      # correctamente los cambios y el blame de cada linea.
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # 2) Instala el JDK, requerido por el SonarScanner para .NET.
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3) Instala el SDK de .NET que usa el proyecto.
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 11.0.x
+
+      # 4) Instala la herramienta de SonarScanner para .NET. Si el secreto
+      # SONAR_TOKEN no existe, esta parte se omite para que el pipeline no falle.
+      - name: Install SonarScanner
+        if: ${{ env.SONAR_TOKEN != '' }}
+        shell: bash
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          echo "$HOME/.dotnet/tools" >> "$GITHUB_PATH"
+
+      # 5) Si no hay token de SonarCloud configurado, avisamos al usuario pero
+      # el flujo sigue funcionando normalmente.
+      - name: SonarCloud analysis skipped
+        if: ${{ env.SONAR_TOKEN == '' }}
+        run: echo "Skipping SonarCloud analysis because SONAR_TOKEN is not configured."
+
+      # 6) Restaura las dependencias del proyecto.
+      - name: Restore dependencies
+        run: dotnet restore
+
+      # 7) Inicia la analitica de SonarCloud antes de compilar para que el
+      # analisis cubra la solucion completa.
+      - name: Begin SonarCloud analysis
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          dotnet sonarscanner begin \
+            /o:"tesisenel" \
+            /k:"TesisEnel_UASD_GestionCirugiaPlastica_2026_03" \
+            /d:sonar.token="${SONAR_TOKEN}" \
+            /d:sonar.host.url="https://sonarcloud.io"
+
+      # 8) Compila la solucion en modo Release. El flag --no-restore evita que
+      # vuelva a restaurar paquetes ya descargados y acelera la ejecucion.
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
+      # 9) Ejecuta la suite de pruebas del proyecto. Si alguna prueba falla,
+      # el workflow marcara el pipeline como fallido.
+      # Ademas, guardamos los resultados en formato TRX para que GitHub pueda
+      # mostrarlos de forma amigable en la interfaz.
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity minimal --logger "trx;LogFileName=test-results.trx" --results-directory TestResults
+
+      # 10) Cierra la analitica de SonarCloud para finalizar el analisis y enviar
+      # los resultados al proyecto configurado en SonarCloud.
+      - name: End SonarCloud analysis
+        if: ${{ env.SONAR_TOKEN != '' }}
+        run: |
+          export PATH="$PATH:$HOME/.dotnet/tools"
+          dotnet sonarscanner end /d:sonar.token="${SONAR_TOKEN}"
+
+      # 11) Publica los resultados de pruebas en GitHub como un Check/Status,
+      # para que los estudiantes puedan ver en una vista organizada si hubo
+      # fallas o exito en cada ejecucion del pipeline.
+      - name: Publish test results
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: .NET test results
+          path: 'TestResults/**/*.trx'
+          reporter: dotnet-trx

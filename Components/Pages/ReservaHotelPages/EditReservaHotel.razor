@@ -63,23 +63,20 @@
                 <h6>Detalle de hoteles</h6>
 
                 <div class="row g-2 mb-3">
-                    <div class="col-md-3">
+                    <div class="col-md-4">
                         <select class="form-select" @bind="hotelSeleccionadoId">
                             <option value="0">Seleccione un hotel</option>
                             @foreach (var h in hoteles)
                             {
-                                <option value="@h.HotelId">@h.Nombre - @h.Destino?.Ciudad (@h.HabitacionesDisponibles disp.)</option>
+                                <option value="@h.HotelId">@h.Nombre - @h.Destino?.Ciudad (@h.HabitacionesDisponibles disp. - @h.PrecioPorNoche.ToString("C")/noche)</option>
                             }
                         </select>
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <input type="number" min="1" class="form-control" placeholder="Habitaciones" @bind="cantidadHabSeleccionada" />
                     </div>
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         <input type="number" min="1" class="form-control" placeholder="Noches" @bind="cantidadNochesSeleccionada" />
-                    </div>
-                    <div class="col-md-2">
-                        <input type="number" step="0.01" class="form-control" placeholder="Precio/noche" @bind="precioSeleccionado" />
                     </div>
                     <div class="col-md-2">
                         <button type="button" class="btn btn-outline-primary w-100" @onclick="AgregarDetalle">
@@ -109,7 +106,7 @@
                                 <td>@d.PrecioUnitario.ToString("C")</td>
                                 <td>@((d.CantidadHabitaciones * d.CantidadNoches * d.PrecioUnitario).ToString("C"))</td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => QuitarDetalle(d)">
+                                    <button type="button" class="btn btn-sm btn-outline-danger" @onclick="() => AbrirModalQuitar(d)" title="Quitar y cargar en el formulario">
                                         <span class="bi bi-trash"></span>
                                     </button>
                                 </td>
@@ -136,18 +133,36 @@
     </div>
 </div>
 
-<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+<div class="modal fade @(mostrarModalQuitar ? "show d-block" : "")" tabindex="-1" style="@(mostrarModalQuitar ? "background-color: rgba(0,0,0,0.5);" : "")">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirmar</h5>
+                <button type="button" class="btn-close" @onclick="CerrarModalQuitar"></button>
+            </div>
+            <div class="modal-body">
+                <p>Desea quitar este hotel del detalle? Sus valores se cargaran en el formulario para que pueda ajustarlos.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModalQuitar">Cancelar</button>
+                <button type="button" class="btn btn-danger" @onclick="ConfirmarQuitarDetalle">Quitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade @(mostrarModalEliminar ? "show d-block" : "")" tabindex="-1" style="@(mostrarModalEliminar ? "background-color: rgba(0,0,0,0.5);" : "")">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Confirmar eliminacion</h5>
-                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                <button type="button" class="btn-close" @onclick="CerrarModalEliminar"></button>
             </div>
             <div class="modal-body">
                 <p>Esta seguro de eliminar esta reserva? Las habitaciones se restauraran automaticamente. Esta accion no se puede deshacer.</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
+                <button type="button" class="btn btn-secondary" @onclick="CerrarModalEliminar">Cancelar</button>
                 <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
             </div>
         </div>
@@ -162,12 +177,15 @@
     private List<Cliente> clientes = new();
     private List<Agente> agentes = new();
     private List<Hotel> hoteles = new();
-    private bool mostrarModal = false;
 
     private int hotelSeleccionadoId = 0;
     private int cantidadHabSeleccionada = 1;
     private int cantidadNochesSeleccionada = 1;
-    private decimal precioSeleccionado = 0;
+
+    private bool mostrarModalQuitar = false;
+    private DetalleReservaHotel? detalleAQuitar;
+
+    private bool mostrarModalEliminar = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -196,6 +214,18 @@
     {
         if (reserva is null) return;
 
+        if (reserva.ClienteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un cliente antes de agregar un hotel");
+            return;
+        }
+
+        if (reserva.AgenteId == 0)
+        {
+            toastService.ShowWarning("Debe seleccionar un agente antes de agregar un hotel");
+            return;
+        }
+
         if (hotelSeleccionadoId == 0)
         {
             toastService.ShowWarning("Debe seleccionar un hotel");
@@ -208,23 +238,50 @@
             return;
         }
 
+        var hotel = hoteles.FirstOrDefault(h => h.HotelId == hotelSeleccionadoId);
+        if (hotel is null)
+        {
+            toastService.ShowWarning("El hotel seleccionado ya no existe");
+            return;
+        }
+
         reserva.Detalles.Add(new DetalleReservaHotel
         {
             HotelId = hotelSeleccionadoId,
             CantidadHabitaciones = cantidadHabSeleccionada,
             CantidadNoches = cantidadNochesSeleccionada,
-            PrecioUnitario = precioSeleccionado
+            PrecioUnitario = hotel.PrecioPorNoche
         });
 
         hotelSeleccionadoId = 0;
         cantidadHabSeleccionada = 1;
         cantidadNochesSeleccionada = 1;
-        precioSeleccionado = 0;
     }
 
-    private void QuitarDetalle(DetalleReservaHotel detalle)
+    private void AbrirModalQuitar(DetalleReservaHotel detalle)
     {
-        reserva?.Detalles.Remove(detalle);
+        detalleAQuitar = detalle;
+        mostrarModalQuitar = true;
+    }
+
+    private void CerrarModalQuitar()
+    {
+        mostrarModalQuitar = false;
+        detalleAQuitar = null;
+    }
+
+    private void ConfirmarQuitarDetalle()
+    {
+        if (reserva is null || detalleAQuitar is null) return;
+
+        hotelSeleccionadoId = detalleAQuitar.HotelId;
+        cantidadHabSeleccionada = detalleAQuitar.CantidadHabitaciones;
+        cantidadNochesSeleccionada = detalleAQuitar.CantidadNoches;
+
+        reserva.Detalles.Remove(detalleAQuitar);
+
+        mostrarModalQuitar = false;
+        detalleAQuitar = null;
     }
 
     private async Task Modificar()
@@ -253,17 +310,17 @@
 
     private void Eliminar()
     {
-        mostrarModal = true;
+        mostrarModalEliminar = true;
     }
 
-    private void CerrarModal()
+    private void CerrarModalEliminar()
     {
-        mostrarModal = false;
+        mostrarModalEliminar = false;
     }
 
     private async Task ConfirmarEliminar()
     {
-        mostrarModal = false;
+        mostrarModalEliminar = false;
         if (reserva is null) return;
 
         var resultado = await ReservaHotelService.Eliminar(reserva.ReservaHotelId);
