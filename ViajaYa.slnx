@@ -1,4 +1,6 @@
 <Solution>
   <Project Path="ViajaYa.csproj" />
+  <Project Path="ViajaYa.Data/ViajaYa.Data.csproj" />
+  <Project Path="ViajaYa.Services/ViajaYa.Services.csproj" />
   <Project Path="ViajaYa.Tests/ViajaYa.Tests.csproj" />
 </Solution>
