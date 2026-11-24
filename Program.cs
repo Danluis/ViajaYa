@@ -77,27 +77,12 @@ app.MapAdditionalIdentityEndpoints();
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
 
     string[] roles = { "Administrador", "Agente" };
     foreach (var rol in roles)
     {
         if (!await roleManager.RoleExistsAsync(rol))
             await roleManager.CreateAsync(new IdentityRole(rol));
-    }
-
-    var adminEmail = app.Configuration["AdminSeed:Email"];
-    var adminPassword = app.Configuration["AdminSeed:Password"];
-
-    if (!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPassword))
-    {
-        var adminUser = await userManager.FindByEmailAsync(adminEmail);
-        if (adminUser == null)
-        {
-            adminUser = new ApplicationUser { UserName = adminEmail, Email = adminEmail, EmailConfirmed = true };
-            await userManager.CreateAsync(adminUser, adminPassword);
-            await userManager.AddToRoleAsync(adminUser, "Administrador");
-        }
     }
 }
 
