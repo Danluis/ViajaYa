@@ -1,7 +1,99 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<PageTitle>Inicio - ViajaYa</PageTitle>
 
-<h1>Hello, world!</h1>
+<div class="dashboard">
 
-Welcome to your new app.
+    <div class="dashboard-header">
+        <div>
+            <span class="dashboard-tag">PANEL PRINCIPAL</span>
+            <h1>Bienvenido a ViajaYa</h1>
+            <p>Administra tus viajes, clientes, reservas y servicios desde un solo lugar.</p>
+        </div>
+
+        <div class="dashboard-icon">
+            <i class="bi bi-airplane-engines-fill"></i>
+        </div>
+    </div>
+
+    <div class="dashboard-section">
+        <h2>Gestion del sistema</h2>
+        <p>Selecciona el modulo al que deseas acceder.</p>
+    </div>
+
+    <div class="module-grid">
+
+        <a href="/Clientes/Index" class="module-card">
+            <div class="module-icon blue">
+                <i class="bi bi-people-fill"></i>
+            </div>
+            <h3>Clientes</h3>
+            <p>Administra la informacion de los clientes.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/Agentes/Index" class="module-card">
+            <div class="module-icon purple">
+                <i class="bi bi-person-badge-fill"></i>
+            </div>
+            <h3>Agentes</h3>
+            <p>Gestiona los agentes de viajes.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/Aerolineas/Index" class="module-card">
+            <div class="module-icon orange">
+                <i class="bi bi-airplane-fill"></i>
+            </div>
+            <h3>Aerolineas</h3>
+            <p>Administra las aerolineas disponibles.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/Destinos/Index" class="module-card">
+            <div class="module-icon green">
+                <i class="bi bi-geo-alt-fill"></i>
+            </div>
+            <h3>Destinos</h3>
+            <p>Gestiona los destinos de viaje.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/Vuelos/Index" class="module-card">
+            <div class="module-icon cyan">
+                <i class="bi bi-ticket-perforated-fill"></i>
+            </div>
+            <h3>Vuelos</h3>
+            <p>Consulta y administra los vuelos.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/Hoteles/Index" class="module-card">
+            <div class="module-icon pink">
+                <i class="bi bi-building"></i>
+            </div>
+            <h3>Hoteles</h3>
+            <p>Administra los hoteles disponibles.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/ReservaVuelos/Index" class="module-card">
+            <div class="module-icon indigo">
+                <i class="bi bi-calendar-check-fill"></i>
+            </div>
+            <h3>Reservas de vuelos</h3>
+            <p>Consulta y gestiona las reservas de vuelos.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+        <a href="/ReservaHoteles/Index" class="module-card">
+            <div class="module-icon teal">
+                <i class="bi bi-house-check-fill"></i>
+            </div>
+            <h3>Reservas de hoteles</h3>
+            <p>Administra las reservas de alojamiento.</p>
+            <span>Acceder <i class="bi bi-arrow-right"></i></span>
+        </a>
+
+    </div>
+</div>
