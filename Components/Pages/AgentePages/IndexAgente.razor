@@ -4,63 +4,158 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject AgenteService AgenteService
 
-<PageTitle>Consulta de Agentes</PageTitle>
+<PageTitle>Agentes - ViajaYa</PageTitle>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Consulta de Agentes</h5>
-            <a href="/Agentes/Create" class="btn btn-primary">
-                <span class="bi bi-plus-circle"></span> Nuevo Agente
-            </a>
+<div class="container py-4">
+
+    <div class="mb-4">
+        <a href="/" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+        </a>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Gestion de Agentes</h3>
+            <p class="text-muted mb-0">Consulta y administra los agentes registrados.</p>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+
+        <a href="/Agentes/Create" class="btn btn-primary px-4">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo agente
+        </a>
+    </div>
+
+    @if (agentes is not null)
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-3">
+                            <i class="bi bi-people fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1">Total de agentes</p>
+                            <h4 class="fw-bold mb-0">@agentes.Count</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white border-0 p-4">
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-funnel me-2 text-primary"></i>Buscar agentes
+            </h5>
+            <p class="text-muted small mb-0">Selecciona un criterio para filtrar los registros.</p>
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold">Filtrar por</label>
                     <select class="form-select" @bind="criterioSeleccionado">
-                        <option value="">Elija una opción</option>
-                        <option value="agenteId">Id</option>
+                        <option value="">Elija una opcion</option>
+                        <option value="agenteId">ID</option>
                         <option value="nombre">Nombre</option>
                         <option value="codigo">Codigo</option>
                     </select>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Busqueda</label>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Busqueda</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar"
-                               @bind="textoBusqueda" @bind:event="oninput"
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-search"></i>
+                        </span>
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Escribe para buscar..."
+                               @bind="textoBusqueda"
+                               @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
-                        <button class="btn btn-outline-secondary" @onclick="Buscar">
-                            <span class="bi bi-search"></span>
+
+                        <button class="btn btn-primary" @onclick="Buscar">
+                            Buscar
                         </button>
                     </div>
                 </div>
+
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" @onclick="Limpiar">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>Limpiar
+                    </button>
+                </div>
+
             </div>
 
             @if (agentes is null)
             {
-                <p>Cargando...</p>
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="text-muted mt-3">Cargando agentes...</p>
+                </div>
+            }
+            else if (agentes.Count == 0)
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-person-x text-muted display-4"></i>
+                    <h5 class="mt-3">No se encontraron agentes</h5>
+                    <p class="text-muted mb-0">No hay registros que coincidan con la busqueda.</p>
+                </div>
             }
             else
             {
-                <QuickGrid Items="@agentes.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
-                    <PropertyColumn Property="@(a => a.AgenteId)" Title="AgenteId" Sortable="true" />
-                    <PropertyColumn Property="@(a => a.Nombre)" Title="Nombre" Sortable="true" />
-                    <PropertyColumn Property="@(a => a.Codigo)" Title="Codigo" Sortable="true" />
-                    <TemplateColumn Title="Opciones">
-                        <a href="@($"/Agentes/Edit/{context.AgenteId}")" class="btn btn-sm btn-outline-primary">
-                            <span class="bi bi-pencil-square"></span> Editar
-                        </a>
-                    </TemplateColumn>
-                </QuickGrid>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Listado de agentes</h6>
+                    <span class="badge bg-primary-subtle text-primary">
+                        @agentes.Count registros
+                    </span>
+                </div>
 
-                <Paginator State="@paginacion" />
+                <div class="table-responsive">
+                    <QuickGrid Items="@agentes.AsQueryable()"
+                               Pagination="@paginacion"
+                               Class="table table-hover align-middle">
 
-                <p class="text-muted">Cantidad: @agentes.Count</p>
+                        <PropertyColumn Property="@(a => a.AgenteId)"
+                                        Title="ID"
+                                        Sortable="true" />
+
+                        <PropertyColumn Property="@(a => a.Nombre)"
+                                        Title="Nombre"
+                                        Sortable="true" />
+
+                        <PropertyColumn Property="@(a => a.Codigo)"
+                                        Title="Codigo"
+                                        Sortable="true" />
+
+                        <TemplateColumn Title="Opciones">
+                            <a href="@($"/Agentes/Edit/{context.AgenteId}")"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square me-1"></i>Editar
+                            </a>
+                        </TemplateColumn>
+
+                    </QuickGrid>
+                </div>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
+                    <span class="text-muted small">
+                        Mostrando @agentes.Count agentes registrados.
+                    </span>
+
+                    <Paginator State="@paginacion" />
+                </div>
             }
+
         </div>
     </div>
+
 </div>
 
 @code {
@@ -117,5 +212,12 @@
                 agentes = await ObtenerLista(a => true);
                 break;
         }
+    }
+
+    private async Task Limpiar()
+    {
+        criterioSeleccionado = "";
+        textoBusqueda = "";
+        agentes = await ObtenerLista(a => true);
     }
 }

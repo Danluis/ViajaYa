@@ -4,63 +4,164 @@
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject AerolineaService AerolineaService
 
-<PageTitle>Consulta de Aerolineas</PageTitle>
+<PageTitle>Aerolineas - ViajaYa</PageTitle>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Consulta de Aerolineas</h5>
-            <a href="/Aerolineas/Create" class="btn btn-primary">
-                <span class="bi bi-plus-circle"></span> Nueva Aerolinea
-            </a>
+<div class="container py-4">
+
+    <div class="mb-4">
+        <a href="/" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver al inicio
+        </a>
+    </div>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+        <div>
+            <h3 class="fw-bold mb-1">Gestion de Aerolineas</h3>
+            <p class="text-muted mb-0">Consulta y administra las aerolineas registradas.</p>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+
+        <a href="/Aerolineas/Create" class="btn btn-primary px-4">
+            <i class="bi bi-plus-circle me-2"></i>Nueva aerolinea
+        </a>
+    </div>
+
+    @if (aerolineas is not null)
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-12 col-md-4">
+                <div class="card border-0 shadow-sm h-100">
+                    <div class="card-body d-flex align-items-center gap-3">
+                        <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-3">
+                            <i class="bi bi-airplane fs-3"></i>
+                        </div>
+                        <div>
+                            <p class="text-muted mb-1">Total de aerolineas</p>
+                            <h4 class="fw-bold mb-0">@aerolineas.Count</h4>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 p-4">
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-funnel me-2 text-primary"></i>Buscar aerolineas
+            </h5>
+            <p class="text-muted small mb-0">
+                Selecciona un criterio para filtrar los registros.
+            </p>
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-3 mb-4">
+
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold">Filtrar por</label>
                     <select class="form-select" @bind="criterioSeleccionado">
-                        <option value="">Elija una opción</option>
-                        <option value="aerolineaId">Id</option>
+                        <option value="">Elija una opcion</option>
+                        <option value="aerolineaId">ID</option>
                         <option value="nombre">Nombre</option>
                         <option value="pais">Pais</option>
                     </select>
                 </div>
-                <div class="col-md-6">
-                    <label class="form-label">Busqueda</label>
+
+                <div class="col-12 col-md-6">
+                    <label class="form-label fw-semibold">Busqueda</label>
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar"
-                               @bind="textoBusqueda" @bind:event="oninput"
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Escribe para buscar..."
+                               @bind="textoBusqueda"
+                               @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
-                        <button class="btn btn-outline-secondary" @onclick="Buscar">
-                            <span class="bi bi-search"></span>
+
+                        <button class="btn btn-primary" @onclick="Buscar">
+                            Buscar
                         </button>
                     </div>
                 </div>
+
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                    <button class="btn btn-outline-secondary w-100" @onclick="Limpiar">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>Limpiar
+                    </button>
+                </div>
+
             </div>
 
             @if (aerolineas is null)
             {
-                <p>Cargando...</p>
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary"></div>
+                    <p class="text-muted mt-3">Cargando aerolineas...</p>
+                </div>
+            }
+            else if (aerolineas.Count == 0)
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-airplane text-muted display-4"></i>
+                    <h5 class="mt-3">No se encontraron aerolineas</h5>
+                    <p class="text-muted mb-0">
+                        No hay registros que coincidan con la busqueda.
+                    </p>
+                </div>
             }
             else
             {
-                <QuickGrid Items="@aerolineas.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
-                    <PropertyColumn Property="@(a => a.AerolineaId)" Title="AerolineaId" Sortable="true" />
-                    <PropertyColumn Property="@(a => a.Nombre)" Title="Nombre" Sortable="true" />
-                    <PropertyColumn Property="@(a => a.Pais)" Title="Pais" Sortable="true" />
-                    <TemplateColumn Title="Opciones">
-                        <a href="@($"/Aerolineas/Edit/{context.AerolineaId}")" class="btn btn-sm btn-outline-primary">
-                            <span class="bi bi-pencil-square"></span> Editar
-                        </a>
-                    </TemplateColumn>
-                </QuickGrid>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="fw-bold mb-0">Listado de aerolineas</h6>
+                    <span class="badge bg-primary-subtle text-primary">
+                        @aerolineas.Count registros
+                    </span>
+                </div>
 
-                <Paginator State="@paginacion" />
+                <div class="table-responsive">
+                    <QuickGrid Items="@aerolineas.AsQueryable()"
+                               Pagination="@paginacion"
+                               Class="table table-hover align-middle">
 
-                <p class="text-muted">Cantidad: @aerolineas.Count</p>
+                        <PropertyColumn Property="@(a => a.AerolineaId)"
+                                        Title="ID"
+                                        Sortable="true" />
+
+                        <PropertyColumn Property="@(a => a.Nombre)"
+                                        Title="Nombre"
+                                        Sortable="true" />
+
+                        <PropertyColumn Property="@(a => a.Pais)"
+                                        Title="Pais"
+                                        Sortable="true" />
+
+                        <TemplateColumn Title="Opciones">
+                            <a href="@($"/Aerolineas/Edit/{context.AerolineaId}")"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square me-1"></i>Editar
+                            </a>
+                        </TemplateColumn>
+
+                    </QuickGrid>
+                </div>
+
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
+                    <span class="text-muted small">
+                        Mostrando @aerolineas.Count aerolineas registradas.
+                    </span>
+
+                    <Paginator State="@paginacion" />
+                </div>
             }
+
         </div>
     </div>
+
 </div>
 
 @code {
@@ -117,5 +218,12 @@
                 aerolineas = await ObtenerLista(a => true);
                 break;
         }
+    }
+
+    private async Task Limpiar()
+    {
+        criterioSeleccionado = "";
+        textoBusqueda = "";
+        aerolineas = await ObtenerLista(a => true);
     }
 }

@@ -6,37 +6,99 @@
 @inject ToastService toastService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Create</PageTitle>
-<EditForm Model="agente" OnValidSubmit="@Guardar">
-    <DataAnnotationsValidator />
+<PageTitle>Nuevo Agente - ViajaYa</PageTitle>
 
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header text-center">
-                <h5>Crear Agente</h5>
-            </div>
+<div class="container py-4">
 
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="agente.Nombre" />
-                    <ValidationMessage For="@(() => agente.Nombre)" />
+    <div class="mb-4">
+        <a href="/Agentes/Index" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver a agentes
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm mx-auto" style="max-width: 750px;">
+
+        <div class="card-header bg-primary text-white p-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-white bg-opacity-25 rounded-3 p-3">
+                    <i class="bi bi-person-plus fs-3"></i>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label"><strong>Codigo</strong></label>
-                    <InputText class="form-control" @bind-Value="agente.Codigo" />
-                    <ValidationMessage For="@(() => agente.Codigo)" />
+                <div>
+                    <h4 class="mb-1 fw-bold">Registrar agente</h4>
+                    <p class="mb-0 text-white-50">
+                        Completa los datos para registrar un nuevo agente.
+                    </p>
                 </div>
-            </div>
-
-            <div class="card-footer text-center mt-2">
-                <a href="/Agentes/Index" class="btn btn-secondary"> <span class="bi bi-arrow-left"> Volver</span></a>
-                <button type="submit" class="btn btn-primary bi bi-floppy"> Guardar</button>
             </div>
         </div>
+
+        <EditForm Model="agente" OnValidSubmit="@Guardar">
+            <DataAnnotationsValidator />
+
+            <div class="card-body p-4">
+
+                <h6 class="fw-bold text-primary mb-3">
+                    <i class="bi bi-person-vcard me-2"></i>Informacion del agente
+                </h6>
+
+                <hr />
+
+                <div class="row g-4">
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Nombre</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-person"></i>
+                            </span>
+
+                            <InputText class="form-control"
+                                       placeholder="Ingrese el nombre del agente"
+                                       @bind-Value="agente.Nombre" />
+                        </div>
+
+                        <ValidationMessage For="@(() => agente.Nombre)" />
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label fw-semibold">Codigo</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="bi bi-upc-scan"></i>
+                            </span>
+
+                            <InputText class="form-control"
+                                       placeholder="Ingrese el codigo del agente"
+                                       @bind-Value="agente.Codigo" />
+                        </div>
+
+                        <ValidationMessage For="@(() => agente.Codigo)" />
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="card-footer bg-white p-4">
+                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+
+                    <a href="/Agentes/Index" class="btn btn-outline-secondary px-4">
+                        Cancelar
+                    </a>
+
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="bi bi-floppy me-2"></i>Guardar agente
+                    </button>
+
+                </div>
+            </div>
+
+        </EditForm>
+
     </div>
-</EditForm>
+</div>
 
 @code {
     private Agente agente { get; set; } = new Agente();

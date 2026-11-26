@@ -7,75 +7,194 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Modificar Cliente</PageTitle>
+<PageTitle>Editar Cliente - ViajaYa</PageTitle>
 
-<EditForm Model="cliente" OnValidSubmit="@Modificar">
-    <DataAnnotationsValidator />
+<div class="container py-4">
 
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header">
-                <h5>Modificar Cliente</h5>
-            </div>
-
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label"><strong>Cedula</strong></label>
-                    <InputText class="form-control" @bind-Value="cliente.Cedula" />
-                    <ValidationMessage For="@(() => cliente.Cedula)" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="cliente.Nombre" />
-                    <ValidationMessage For="@(() => cliente.Nombre)" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label"><strong>Telefono</strong></label>
-                    <InputText class="form-control" @bind-Value="cliente.Telefono" />
-                    <ValidationMessage For="@(() => cliente.Telefono)" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label"><strong>Email</strong></label>
-                    <InputText class="form-control" @bind-Value="cliente.Email" />
-                    <ValidationMessage For="@(() => cliente.Email)" />
-                </div>
-            </div>
-
-            <div class="card-footer text-center">
-                <a href="/Clientes/Index" class="btn btn-secondary">
-                    <span class="bi bi-arrow-left"></span> Volver
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <span class="bi bi-floppy"></span> Modificar
-                </button>
-                <button type="button" class="btn btn-danger" @onclick="Eliminar">
-                    <span class="bi bi-trash"></span> Eliminar
-                </button>
-            </div>
-        </div>
+    <div class="mb-4">
+        <a href="/Clientes/Index" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver a clientes
+        </a>
     </div>
-</EditForm>
 
-<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar eliminacion</h5>
-                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Esta seguro de eliminar este cliente? Esta accion no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
-            </div>
+    @if (cliente.ClienteId == 0)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="text-muted mt-3">Cargando informacion del cliente...</p>
         </div>
-    </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm mx-auto" style="max-width: 850px;">
+
+            <div class="card-header bg-primary text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
+                        <i class="bi bi-person-gear fs-3"></i>
+                    </div>
+
+                    <div>
+                        <h4 class="mb-1 fw-bold">Editar cliente</h4>
+                        <p class="mb-0 text-white-50">
+                            Modifica la informacion del cliente seleccionado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <EditForm Model="cliente" OnValidSubmit="@Modificar">
+                <DataAnnotationsValidator />
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-primary mb-0">
+                            <i class="bi bi-person-vcard me-2"></i>Informacion personal
+                        </h6>
+
+                        <span class="badge bg-primary-subtle text-primary">
+                            Cliente #@cliente.ClienteId
+                        </span>
+                    </div>
+
+                    <hr />
+
+                    <div class="row g-4">
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Cedula</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-card-text"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese la cedula"
+                                           @bind-Value="cliente.Cedula" />
+                            </div>
+                            <ValidationMessage For="@(() => cliente.Cedula)" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Nombre completo</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-person"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el nombre"
+                                           @bind-Value="cliente.Nombre" />
+                            </div>
+                            <ValidationMessage For="@(() => cliente.Nombre)" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Telefono</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-telephone"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el telefono"
+                                           @bind-Value="cliente.Telefono" />
+                            </div>
+                            <ValidationMessage For="@(() => cliente.Telefono)" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Correo electronico</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el correo"
+                                           @bind-Value="cliente.Email" />
+                            </div>
+                            <ValidationMessage For="@(() => cliente.Email)" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card-footer bg-white p-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+
+                        <button type="button"
+                                class="btn btn-outline-danger px-4"
+                                @onclick="Eliminar">
+                            <i class="bi bi-trash me-2"></i>Eliminar cliente
+                        </button>
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <a href="/Clientes/Index" class="btn btn-outline-secondary px-4">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-floppy me-2"></i>Guardar cambios
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </EditForm>
+
+        </div>
+    }
+
 </div>
+
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block" tabindex="-1"
+         style="background-color: rgba(0,0,0,0.5);"
+         role="dialog"
+         aria-modal="true">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                        Confirmar eliminacion
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CerrarModal">
+                    </button>
+                </div>
+
+                <div class="modal-body py-4">
+                    <p class="mb-2">
+                        Estas seguro de que deseas eliminar este cliente?
+                    </p>
+                    <p class="text-muted small mb-0">
+                        Esta accion no se puede deshacer.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="ConfirmarEliminar">
+                        <i class="bi bi-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -87,6 +206,7 @@
     protected override async Task OnInitializedAsync()
     {
         var resultado = await ClienteService.Buscar(ClienteId);
+
         if (resultado.IsSuccess && resultado.Value is not null)
         {
             cliente = resultado.Value;
