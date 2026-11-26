@@ -1,0 +1,176 @@
+﻿
+.dashboard {
+    width: 100%;
+}
+
+.dashboard-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 35px;
+    margin-bottom: 35px;
+    border-radius: 18px;
+    background: linear-gradient(120deg, #1d4ed8, #4338ca);
+    color: white;
+}
+
+.dashboard-tag {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    opacity: .8;
+}
+
+.dashboard-header h1 {
+    margin: 10px 0;
+    font-size: clamp(25px, 4vw, 36px);
+    font-weight: 750;
+}
+
+.dashboard-header p {
+    margin: 0;
+    color: #e0e7ff;
+    font-size: 15px;
+}
+
+.dashboard-icon {
+    font-size: 75px;
+    opacity: .85;
+}
+
+.dashboard-section {
+    margin-bottom: 20px;
+}
+
+    .dashboard-section h2 {
+        font-size: 21px;
+        font-weight: 700;
+        color: #172554;
+        margin-bottom: 5px;
+    }
+
+    .dashboard-section p {
+        color: #64748b;
+        margin: 0;
+    }
+
+.module-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.module-card {
+    display: flex;
+    flex-direction: column;
+    padding: 23px;
+    min-height: 205px;
+    background: white;
+    border: 1px solid #e5eaf1;
+    border-radius: 15px;
+    text-decoration: none;
+    color: #172554;
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+    .module-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px rgba(15, 23, 42, .08);
+        color: #1d4ed8;
+    }
+
+.module-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    font-size: 21px;
+    margin-bottom: 17px;
+}
+
+    .module-icon.blue {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .module-icon.purple {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+
+    .module-icon.orange {
+        background: #ffedd5;
+        color: #ea580c;
+    }
+
+    .module-icon.green {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+
+    .module-icon.cyan {
+        background: #cffafe;
+        color: #0891b2;
+    }
+
+    .module-icon.pink {
+        background: #fce7f3;
+        color: #db2777;
+    }
+
+    .module-icon.indigo {
+        background: #e0e7ff;
+        color: #4f46e5;
+    }
+
+    .module-icon.teal {
+        background: #ccfbf1;
+        color: #0d9488;
+    }
+
+.module-card h3 {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 7px;
+}
+
+.module-card p {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 17px;
+}
+
+.module-card span {
+    margin-top: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: #2563eb;
+}
+
+@media (max-width: 1100px) {
+    .module-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-header {
+        padding: 25px 20px;
+    }
+
+    .dashboard-icon {
+        font-size: 45px;
+    }
+
+    .module-grid {
+        grid-template-columns: 1fr;
+        gap: 13px;
+    }
+
+    .module-card {
+        min-height: 180px;
+    }
+}

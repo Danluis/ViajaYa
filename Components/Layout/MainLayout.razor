@@ -1,24 +1,68 @@
 ﻿@inherits LayoutComponentBase
+@inject NavigationManager NavigationManager
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
+<div class="app-layout">
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://learn.microsoft.com/aspnet/core/" target="_blank">About</a>
+    <header class="app-header">
+        <div class="header-container">
+
+            <a href="/" class="brand">
+                <span class="brand-icon">
+                    <i class="bi bi-airplane-engines-fill"></i>
+                </span>
+
+                <span class="brand-text">
+                    <strong>ViajaYa</strong>
+                    <small>Gestion de viajes</small>
+                </span>
+            </a>
+
+            <div class="header-actions">
+                <AuthorizeView>
+                    <Authorized>
+                        <a href="/Account/Manage" class="user-link">
+                            <i class="bi bi-person-circle"></i>
+                            <span>@context.User.Identity?.Name</span>
+                        </a>
+
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken />
+                            <input type="hidden" name="ReturnUrl" value="/" />
+                            <button type="submit" class="btn-logout">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Salir
+                            </button>
+                        </form>
+                    </Authorized>
+
+                    <NotAuthorized>
+                        <a href="/Account/Login" class="btn-login">
+                            Iniciar sesion
+                        </a>
+
+                        <a href="/Account/Register" class="btn-register">
+                            Registrarse
+                        </a>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+
         </div>
+    </header>
 
-        <article class="content px-4">
-            @Body
-        </article>
+    <main class="main-content">
+        @Body
     </main>
+
+    <footer class="app-footer">
+        <p>ViajaYa &copy; 2026 - Sistema de gestion de viajes</p>
+    </footer>
+
 </div>
 
 <div id="blazor-error-ui" data-nosnippet>
-    An unhandled error has occurred.
-    <a href="." class="reload">Reload</a>
+    Ha ocurrido un error.
+    <a href="." class="reload">Recargar</a>
     <span class="dismiss">🗙</span>
 </div>
 
