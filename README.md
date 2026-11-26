@@ -1,89 +1,114 @@
-# ✈️ ViajaYa
-
-### Sistema de gestión de viajes, vuelos y reservas
+# ✈️ ViajaYa — Sistema de Gestión de Viajes
 
 <p align="center">
-  **ViajaYa** es una aplicación web desarrollada para facilitar la administración de una agencia de viajes, centralizando la gestión de clientes, agentes, destinos, vuelos, hoteles y reservas en una sola plataforma.
+  <strong>Una plataforma web para gestionar servicios y operaciones de una agencia de viajes.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/.NET-11.0-512BD4?style=for-the-badge&logo=dotnet&logoColor=white" alt=".NET 11">
+  <img src="https://img.shields.io/badge/Blazor-Interactive%20Server-512BD4?style=for-the-badge&logo=blazor&logoColor=white" alt="Blazor">
+  <img src="https://img.shields.io/badge/Entity%20Framework%20Core-ORM-6B3FA0?style=for-the-badge" alt="Entity Framework Core">
+  <img src="https://img.shields.io/badge/C%23-Language-239120?style=for-the-badge&logo=csharp&logoColor=white" alt="C Sharp">
 </p>
 
 ---
 
-## 🌎 Acerca del proyecto
+## 📌 Acerca del proyecto
 
-ViajaYa es un proyecto desarrollado con **ASP.NET Core y Blazor**, orientado a la gestión de operaciones de una agencia de viajes.
+**ViajaYa** es una aplicación web desarrollada como proyecto académico de Ingeniería en Sistemas. Su objetivo es facilitar la administración de una agencia de viajes mediante una plataforma que centraliza la información de clientes, agentes, aerolíneas, destinos, hoteles, vuelos y reservas.
 
-Su objetivo es ofrecer una plataforma organizada que permita administrar la información de los clientes y los servicios turísticos, facilitando el control de vuelos, hoteles y sus respectivas reservas.
+El sistema permite gestionar las operaciones principales de una agencia de viajes desde una interfaz intuitiva, moderna y organizada.
 
-## ✨ Funcionalidades
+## 🎯 Objetivos
 
-- 👥 **Gestión de clientes:** registro, consulta, modificación y eliminación de clientes.
-- 🧑‍💼 **Gestión de agentes:** administración de los agentes de la agencia.
-- 📍 **Gestión de destinos:** mantenimiento de los destinos disponibles.
-- 🛫 **Gestión de aerolíneas:** administración de las aerolíneas.
-- ✈️ **Gestión de vuelos:** control de la información de los vuelos.
-- 🏨 **Gestión de hoteles:** administración de hoteles.
-- 🎫 **Reservas de vuelos:** registro y administración de reservas aéreas.
-- 🛎️ **Reservas de hoteles:** control de las reservas de alojamiento.
+- Centralizar la información de los servicios turísticos.
+- Facilitar la administración de clientes y agentes.
+- Organizar la información de vuelos, hoteles y destinos.
+- Gestionar las reservas de vuelos y hoteles.
+- Ofrecer una interfaz sencilla y adaptable a diferentes dispositivos.
+
+## 🚀 Funcionalidades principales
+
+| Módulo | Descripción |
+|---|---|
+| 👥 Clientes | Registro, consulta, edición y eliminación de clientes. |
+| 🧑‍💼 Agentes | Administración de los agentes de viajes. |
+| ✈️ Aerolíneas | Gestión de las aerolíneas disponibles. |
+| 🌎 Destinos | Administración de destinos turísticos. |
+| 🏨 Hoteles | Gestión de información de hoteles. |
+| 🛫 Vuelos | Registro y administración de vuelos. |
+| 🎫 Reservas de vuelos | Gestión de reservas relacionadas con vuelos. |
+| 🛎️ Reservas de hoteles | Administración de reservas de alojamiento. |
 
 ## 🛠️ Tecnologías utilizadas
 
-| Tecnología | Uso |
-|---|---|
-| C# | Lenguaje de programación |
-| .NET 11 | Plataforma de desarrollo |
-| Blazor | Interfaz web interactiva |
-| Entity Framework Core 11 | Acceso y gestión de datos |
-| SQLite | Base de datos |
-| Bootstrap | Diseño y estilos |
-| QuickGrid | Visualización de registros |
-| ASP.NET Core Identity | Gestión de autenticación |
+- **C#** — Lenguaje principal de programación.
+- **.NET 11** — Plataforma de desarrollo.
+- **Blazor Razor Components** — Desarrollo de la interfaz web.
+- **Interactive Server** — Modelo de interactividad.
+- **Entity Framework Core** — Acceso y gestión de datos.
+- **Bootstrap 5** — Diseño y estructura visual.
+- **Bootstrap Icons** — Iconografía.
+- **QuickGrid** — Presentación de información en tablas.
+- **CSS** — Personalización y diseño de la interfaz.
+- **Git y GitHub** — Control de versiones.
 
-## 🏗️ Estructura del proyecto
+## 🏗️ Arquitectura del proyecto
+
+La solución está organizada en diferentes proyectos para separar las responsabilidades:
 
 ```text
 ViajaYa/
 │
-├── Components/
-│   ├── Layout/
-│   └── Pages/
-│       ├── AerolineaPages/
-│       ├── AgentePages/
-│       ├── ClientePages/
-│       ├── DestinoPages/
-│       ├── HotelPages/
-│       ├── ReservaHotelPages/
-│       ├── ReservaVueloPages/
-│       └── VueloPages/
+├── ViajaYa/
+│   ├── Components/
+│   │   ├── Layout/
+│   │   └── Pages/
+│   │       ├── AgentePages/
+│   │       ├── AerolineaPages/
+│   │       ├── ClientePages/
+│   │       ├── DestinoPages/
+│   │       ├── HotelPages/
+│   │       ├── ReservaHotelPages/
+│   │       ├── ReservaVueloPages/
+│   │       └── VueloPages/
+│   │
+│   └── wwwroot/
 │
-├── Data/
+├── ViajaYa.Data/
 │
-├── Models/
+├── ViajaYa.Services/
 │
-├── Services/
+├── ViajaYa.Tests/
 │
-├── wwwroot/
-│
-├── Program.cs
-└── ViajaYa.csproj
+└── ViajaYa.sln
 ```
 
-## ⚙️ Requisitos
+**Separación de responsabilidades:**
 
-Antes de ejecutar el proyecto, asegúrate de tener instalado:
+- `ViajaYa`: aplicación web y componentes de interfaz.
+- `ViajaYa.Data`: acceso y persistencia de datos.
+- `ViajaYa.Services`: lógica y operaciones del sistema.
+- `ViajaYa.Tests`: proyecto destinado a las pruebas.
 
-- [.NET SDK 11](https://dotnet.microsoft.com/download/dotnet/11.0)
-- [Visual Studio](https://visualstudio.microsoft.com/) o Visual Studio Code.
-- [Git](https://git-scm.com/)
+## 💻 Requisitos
 
-## 🚀 Instalación y ejecución
+Para ejecutar el proyecto necesitas:
+
+- Windows, Linux o macOS.
+- Visual Studio 2022 o Visual Studio Code.
+- SDK de .NET 11.
+- Git.
+
+## ⚙️ Instalación y ejecución
 
 **1. Clonar el repositorio**
 
 ```bash
-git clone https://github.com/Danluis/ViajaYa.git
+git clone URL_DEL_REPOSITORIO
 ```
 
-**2. Entrar en la carpeta del proyecto**
+**2. Entrar a la carpeta del proyecto**
 
 ```bash
 cd ViajaYa
@@ -95,7 +120,7 @@ cd ViajaYa
 dotnet restore
 ```
 
-**4. Compilar el proyecto**
+**4. Compilar la solución**
 
 ```bash
 dotnet build
@@ -104,19 +129,57 @@ dotnet build
 **5. Ejecutar la aplicación**
 
 ```bash
-dotnet run
+dotnet run --project ViajaYa
 ```
 
-La dirección local se mostrará en la consola al iniciar la aplicación.
+La dirección local de acceso se mostrará en la consola al iniciar la aplicación.
 
-## 📌 Objetivo académico
+## 🧪 Pruebas
 
-Este proyecto forma parte del desarrollo de competencias en ingeniería de software, aplicando conceptos de programación orientada a objetos, desarrollo web, persistencia de datos y operaciones CRUD.
+El proyecto incluye un módulo independiente para pruebas.
 
-## 👨‍💻 Equipo de desarrollo
+Para ejecutar las pruebas disponibles:
 
-Proyecto colaborativo desarrollado por estudiantes de Ingeniería en Sistemas.
+```bash
+dotnet test
+```
 
-## 📄 Licencia
+## 🎨 Interfaz de usuario
 
-Proyecto desarrollado con fines académicos.
+ViajaYa cuenta con una interfaz enfocada en la experiencia del usuario:
+
+- Diseño moderno con identidad visual azul.
+- Navegación organizada entre módulos.
+- Formularios para registrar y modificar información.
+- Tablas para consultar registros.
+- Tarjetas con bordes redondeados y sombras suaves.
+- Diseño adaptable a diferentes tamaños de pantalla.
+- Pantalla de bienvenida animada.
+
+## 📚 Estado del proyecto
+
+**En desarrollo**
+
+El proyecto continúa evolucionando mediante mejoras en la interfaz, organización del código y funcionalidades de los diferentes módulos.
+
+## 👨‍💻 Autores
+
+Este proyecto fue desarrollado en colaboración por:
+
+### Williams Rafael Sánchez Acosta
+
+- GitHub: [@Williamsanchez056](https://github.com/Williamsanchez056)
+
+### Dan Luis
+
+- GitHub: [@Danluis](https://github.com/Danluis)
+
+**Proyecto académico — Ingeniería en Sistemas**
+
+---
+
+<p align="center">
+  ✈️ <strong>ViajaYa</strong>
+  <br>
+  <em>Tu próximo destino comienza aquí.</em>
+</p>
