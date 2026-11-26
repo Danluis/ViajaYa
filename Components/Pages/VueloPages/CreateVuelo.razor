@@ -11,63 +11,54 @@
 
 <PageTitle>Crear vuelo - ViajaYa</PageTitle>
 
-<div class="container-fluid py-4 px-3 px-lg-4">
-
-    <div class="mb-4">
-        <a href="/Vuelos/Index" class="text-decoration-none text-secondary small">
+<div class="vuelo-create-page">
+    <div class="vuelo-create-heading">
+        <a href="/Vuelos/Index" class="vuelo-create-back">
             <i class="bi bi-arrow-left me-2"></i>Volver a vuelos
         </a>
 
         <div class="mt-3">
-            <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
-                GESTION DE VUELOS
-            </span>
-            <h2 class="fw-bold mb-1">Registrar nuevo vuelo</h2>
-            <p class="text-muted mb-0">
-                Completa la informacion para registrar un nuevo vuelo en el sistema.
-            </p>
+            <span class="vuelo-create-tag">GESTION DE VUELOS</span>
+            <h2>Registrar nuevo vuelo</h2>
+            <p>Completa la informacion para registrar un nuevo vuelo en el sistema.</p>
         </div>
     </div>
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 p-4">
-            <div class="d-flex align-items-center gap-3">
-                <div class="rounded-3 bg-primary bg-opacity-10 p-3">
-                    <i class="bi bi-airplane-engines text-primary fs-3"></i>
-                </div>
-                <div>
-                    <h5 class="fw-bold mb-1">Informacion del vuelo</h5>
-                    <p class="text-muted small mb-0">
-                        Los campos marcados deben completarse correctamente.
-                    </p>
-                </div>
+    <section class="vuelo-create-card">
+        <div class="vuelo-create-card-header">
+            <div class="vuelo-create-icon">
+                <i class="bi bi-airplane-engines"></i>
+            </div>
+            <div>
+                <h5>Informacion del vuelo</h5>
+                <p>Completa los campos para registrar el vuelo correctamente.</p>
             </div>
         </div>
 
         <EditForm Model="vuelo" OnValidSubmit="@Guardar">
             <DataAnnotationsValidator />
 
-            <div class="card-body p-4">
+            <div class="vuelo-create-card-body">
                 <div class="row g-4">
 
                     <div class="col-12">
-                        <h6 class="fw-bold text-primary mb-0">
+                        <h6 class="vuelo-create-section-title">
                             <i class="bi bi-ticket-perforated me-2"></i>Datos generales
                         </h6>
-                        <hr class="mt-2" />
+                        <hr class="vuelo-create-divider" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Numero de vuelo</label>
-                        <InputText class="form-control"
+                        <label class="vuelo-create-label">Numero de vuelo</label>
+                        <InputText class="form-control vuelo-create-input"
                                    placeholder="Ejemplo: AV123"
                                    @bind-Value="vuelo.NumeroVuelo" />
                         <ValidationMessage For="@(() => vuelo.NumeroVuelo)" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Aerolinea</label>
-                        <InputSelect class="form-select" @bind-Value="vuelo.AerolineaId">
+                        <label class="vuelo-create-label">Aerolinea</label>
+                        <InputSelect class="form-select vuelo-create-input" @bind-Value="vuelo.AerolineaId">
                             <option value="0">Seleccione una aerolinea</option>
                             @foreach (var a in aerolineas)
                             {
@@ -78,8 +69,8 @@
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Destino</label>
-                        <InputSelect class="form-select" @bind-Value="vuelo.DestinoId">
+                        <label class="vuelo-create-label">Destino</label>
+                        <InputSelect class="form-select vuelo-create-input" @bind-Value="vuelo.DestinoId">
                             <option value="0">Seleccione un destino</option>
                             @foreach (var d in destinos)
                             {
@@ -90,42 +81,44 @@
                     </div>
 
                     <div class="col-12">
-                        <h6 class="fw-bold text-primary mb-0 mt-2">
+                        <h6 class="vuelo-create-section-title vuelo-create-section-spaced">
                             <i class="bi bi-calendar-event me-2"></i>Itinerario
                         </h6>
-                        <hr class="mt-2" />
+                        <hr class="vuelo-create-divider" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Fecha de salida</label>
-                        <InputDate class="form-control" @bind-Value="vuelo.FechaSalida" />
+                        <label class="vuelo-create-label">Fecha de salida</label>
+                        <InputDate class="form-control vuelo-create-input"
+                                   @bind-Value="vuelo.FechaSalida" />
                         <ValidationMessage For="@(() => vuelo.FechaSalida)" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Fecha de llegada</label>
-                        <InputDate class="form-control" @bind-Value="vuelo.FechaLlegada" />
+                        <label class="vuelo-create-label">Fecha de llegada</label>
+                        <InputDate class="form-control vuelo-create-input"
+                                   @bind-Value="vuelo.FechaLlegada" />
                         <ValidationMessage For="@(() => vuelo.FechaLlegada)" />
                     </div>
 
                     <div class="col-12">
-                        <h6 class="fw-bold text-primary mb-0 mt-2">
+                        <h6 class="vuelo-create-section-title vuelo-create-section-spaced">
                             <i class="bi bi-cash-coin me-2"></i>Disponibilidad y precio
                         </h6>
-                        <hr class="mt-2" />
+                        <hr class="vuelo-create-divider" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Asientos disponibles</label>
-                        <InputNumber class="form-control"
+                        <label class="vuelo-create-label">Asientos disponibles</label>
+                        <InputNumber class="form-control vuelo-create-input"
                                      placeholder="Cantidad de asientos"
                                      @bind-Value="vuelo.AsientosDisponibles" />
                         <ValidationMessage For="@(() => vuelo.AsientosDisponibles)" />
                     </div>
 
                     <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Precio</label>
-                        <InputNumber class="form-control"
+                        <label class="vuelo-create-label">Precio</label>
+                        <InputNumber class="form-control vuelo-create-input"
                                      placeholder="Precio del vuelo"
                                      @bind-Value="vuelo.Precio" />
                         <ValidationMessage For="@(() => vuelo.Precio)" />
@@ -134,19 +127,17 @@
                 </div>
             </div>
 
-            <div class="card-footer bg-white border-0 p-4">
-                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
-                    <a href="/Vuelos/Index" class="btn btn-outline-secondary px-4">
-                        <i class="bi bi-x-circle me-2"></i>Cancelar
-                    </a>
+            <div class="vuelo-create-card-footer">
+                <a href="/Vuelos/Index" class="btn vuelo-create-btn-cancel">
+                    <i class="bi bi-x-circle me-2"></i>Cancelar
+                </a>
 
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-floppy me-2"></i>Guardar vuelo
-                    </button>
-                </div>
+                <button type="submit" class="btn vuelo-create-btn-save">
+                    <i class="bi bi-floppy me-2"></i>Guardar vuelo
+                </button>
             </div>
         </EditForm>
-    </div>
+    </section>
 </div>
 
 @code {

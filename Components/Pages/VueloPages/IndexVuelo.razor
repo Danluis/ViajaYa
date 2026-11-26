@@ -2,82 +2,62 @@
 @using ViajaYa.Models
 @using ViajaYa.Services
 @using Microsoft.AspNetCore.Components.QuickGrid
+@using Microsoft.AspNetCore.Components.Web
 @inject VueloService VueloService
 @rendermode InteractiveServer
 
 <PageTitle>Vuelos - ViajaYa</PageTitle>
 
-<div class="container-fluid py-4 px-3 px-lg-4">
+<div class="vuelos-index-page">
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-
+    <div class="vuelos-index-header">
         <div>
-            <a href="/" class="text-decoration-none text-secondary small">
+            <a href="/" class="vuelos-index-back">
                 <i class="bi bi-arrow-left me-2"></i>Volver al inicio
             </a>
 
             <div class="mt-3">
-                <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
-                    GESTION DEL SISTEMA
-                </span>
-
-                <h2 class="fw-bold mb-1">Gestion de vuelos</h2>
-                <p class="text-muted mb-0">
-                    Consulta, busca y administra los vuelos registrados.
-                </p>
+                <span class="vuelos-index-tag">GESTION DEL SISTEMA</span>
+                <h2>Gestion de vuelos</h2>
+                <p>Consulta, busca y administra los vuelos registrados.</p>
             </div>
         </div>
 
-        <a href="/Vuelos/Create" class="btn btn-primary px-4 py-2">
+        <a href="/Vuelos/Create" class="btn vuelos-index-btn-new">
             <i class="bi bi-plus-circle me-2"></i>Nuevo vuelo
         </a>
-
     </div>
 
-    <div class="row g-3 mb-4">
+    <div class="vuelos-index-stats">
+        <div class="vuelos-index-stat-card">
+            <div>
+                <span>Total de vuelos</span>
+                <h3>@(vuelos?.Count ?? 0)</h3>
+            </div>
 
-        <div class="col-12 col-sm-6 col-xl-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="vuelos-index-stat-icon">
+                <i class="bi bi-airplane-engines"></i>
+            </div>
+        </div>
+    </div>
 
-                        <div>
-                            <p class="text-muted mb-1">Total de vuelos</p>
-                            <h3 class="fw-bold mb-0">
-                                @(vuelos?.Count ?? 0)
-                            </h3>
-                        </div>
-
-                        <div class="rounded-3 bg-primary bg-opacity-10 p-3">
-                            <i class="bi bi-airplane-engines text-primary fs-3"></i>
-                        </div>
-
-                    </div>
-                </div>
+    <section class="vuelos-index-card">
+        <div class="vuelos-index-card-header">
+            <div class="vuelos-index-section-icon">
+                <i class="bi bi-funnel"></i>
+            </div>
+            <div>
+                <h5>Busqueda y filtros</h5>
+                <p>Utiliza los filtros para encontrar los vuelos que necesitas.</p>
             </div>
         </div>
 
-    </div>
-
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-header bg-white border-0 p-4">
-            <h5 class="fw-bold mb-1">
-                <i class="bi bi-funnel text-primary me-2"></i>Busqueda y filtros
-            </h5>
-            <p class="text-muted small mb-0">
-                Utiliza los filtros para encontrar los vuelos que necesitas.
-            </p>
-        </div>
-
-        <div class="card-body px-4 pb-4">
-
+        <div class="vuelos-index-card-body">
             <div class="row g-3">
 
                 <div class="col-12 col-md-4">
-                    <label class="form-label fw-semibold">Filtrar por</label>
-
-                    <select class="form-select" @bind="criterioSeleccionado">
+                    <label class="vuelos-index-label">Filtrar por</label>
+                    <select class="form-select vuelos-index-input" @bind="criterioSeleccionado">
                         <option value="">Elija una opcion</option>
                         <option value="vueloId">ID del vuelo</option>
                         <option value="numeroVuelo">Numero de vuelo</option>
@@ -87,67 +67,67 @@
                 </div>
 
                 <div class="col-12 col-md-8">
-                    <label class="form-label fw-semibold">Buscar vuelo</label>
+                    <label class="vuelos-index-label">Buscar vuelo</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text vuelos-index-input-icon">
                             <i class="bi bi-search"></i>
                         </span>
 
                         <input type="text"
-                               class="form-control"
+                               class="form-control vuelos-index-input"
                                placeholder="Escribe el dato que deseas buscar..."
                                @bind="textoBusqueda"
                                @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
 
                         <button type="button"
-                                class="btn btn-primary"
+                                class="btn vuelos-index-btn-search"
                                 @onclick="Buscar">
-                            Buscar
+                            <i class="bi bi-search me-1"></i>Buscar
                         </button>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-5">
-                    <label class="form-label fw-semibold">Fecha de salida desde</label>
+                    <label class="vuelos-index-label">Fecha de salida desde</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text vuelos-index-input-icon">
                             <i class="bi bi-calendar-event"></i>
                         </span>
 
                         <input type="date"
-                               class="form-control"
+                               class="form-control vuelos-index-input"
                                @bind="fechaDesde" />
                     </div>
                 </div>
 
                 <div class="col-12 col-md-5">
-                    <label class="form-label fw-semibold">Fecha de salida hasta</label>
+                    <label class="vuelos-index-label">Fecha de salida hasta</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text vuelos-index-input-icon">
                             <i class="bi bi-calendar-check"></i>
                         </span>
 
                         <input type="date"
-                               class="form-control"
+                               class="form-control vuelos-index-input"
                                @bind="fechaHasta" />
                     </div>
                 </div>
 
                 <div class="col-12 col-md-2 d-flex align-items-end">
-                    <div class="d-flex gap-2 w-100">
+                    <div class="vuelos-index-filter-actions">
                         <button type="button"
-                                class="btn btn-outline-primary flex-grow-1"
+                                class="btn vuelos-index-btn-filter"
                                 title="Aplicar filtros"
                                 @onclick="Buscar">
                             <i class="bi bi-filter"></i>
                         </button>
 
                         <button type="button"
-                                class="btn btn-outline-secondary flex-grow-1"
+                                class="btn vuelos-index-btn-clear"
                                 title="Limpiar filtros"
                                 @onclick="Limpiar">
                             <i class="bi bi-eraser"></i>
@@ -157,45 +137,43 @@
 
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="card border-0 shadow-sm">
-
-        <div class="card-header bg-white border-0 p-4">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
-                <div>
-                    <h5 class="fw-bold mb-1">Listado de vuelos</h5>
-                    <p class="text-muted small mb-0">
-                        Consulta la informacion de los vuelos registrados.
-                    </p>
-                </div>
-
-                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
-                    @(vuelos?.Count ?? 0) registros
-                </span>
+    <section class="vuelos-index-card">
+        <div class="vuelos-index-card-header vuelos-index-list-header">
+            <div>
+                <h5>Listado de vuelos</h5>
+                <p>Consulta la informacion de los vuelos registrados.</p>
             </div>
+
+            <span class="vuelos-index-records">
+                @(vuelos?.Count ?? 0) registros
+            </span>
         </div>
 
-        <div class="card-body p-0">
+        <div class="vuelos-index-table-container">
 
             @if (vuelos is null)
             {
-                <div class="text-center py-5">
+                <div class="vuelos-index-loading">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Cargando...</span>
                     </div>
-                    <p class="text-muted mt-3 mb-0">Cargando vuelos...</p>
+                    <p>Cargando vuelos...</p>
                 </div>
             }
             else if (vuelos.Count == 0)
             {
-                <div class="text-center py-5 px-3">
-                    <i class="bi bi-airplane text-muted display-4"></i>
-                    <h5 class="fw-bold mt-3">No hay vuelos disponibles</h5>
-                    <p class="text-muted mb-3">
-                        No se encontraron vuelos con los criterios seleccionados.
-                    </p>
-                    <button class="btn btn-outline-primary" @onclick="Limpiar">
+                <div class="vuelos-index-empty">
+                    <div class="vuelos-index-empty-icon">
+                        <i class="bi bi-airplane"></i>
+                    </div>
+
+                    <h5>No hay vuelos disponibles</h5>
+                    <p>No se encontraron vuelos con los criterios seleccionados.</p>
+
+                    <button class="btn vuelos-index-btn-clear-list"
+                            @onclick="Limpiar">
                         <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar filtros
                     </button>
                 </div>
@@ -205,7 +183,7 @@
                 <div class="table-responsive">
                     <QuickGrid Items="@vuelos.AsQueryable()"
                                Pagination="@paginacion"
-                               Class="table table-hover align-middle mb-0">
+                               Class="table table-hover align-middle mb-0 vuelos-index-table">
 
                         <PropertyColumn Property="@(v => v.VueloId)"
                                         Title="ID"
@@ -258,7 +236,7 @@
 
                         <TemplateColumn Title="Opciones">
                             <a href="@($"/Vuelos/Edit/{context.VueloId}")"
-                               class="btn btn-sm btn-outline-primary">
+                               class="btn btn-sm vuelos-index-btn-edit">
                                 <i class="bi bi-pencil-square me-1"></i>Editar
                             </a>
                         </TemplateColumn>
@@ -266,19 +244,14 @@
                     </QuickGrid>
                 </div>
 
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 p-3 border-top">
-
-                    <span class="text-muted small">
-                        Cantidad de vuelos: @vuelos.Count
-                    </span>
-
+                <div class="vuelos-index-table-footer">
+                    <span>Cantidad de vuelos: @vuelos.Count</span>
                     <Paginator State="@paginacion" />
-
                 </div>
             }
 
         </div>
-    </div>
+    </section>
 
 </div>
 

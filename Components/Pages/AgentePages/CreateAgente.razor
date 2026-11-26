@@ -8,49 +8,49 @@
 
 <PageTitle>Nuevo Agente - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="agente-form-page">
 
-    <div class="mb-4">
-        <a href="/Agentes/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a agentes
-        </a>
+    <a href="/Agentes/Index" class="agente-back-link">
+        <i class="bi bi-arrow-left me-2"></i>
+        Volver a agentes
+    </a>
+
+    <div class="agente-form-header">
+        <div class="header-icon">
+            <i class="bi bi-person-plus"></i>
+        </div>
+
+        <div>
+            <h1>Registrar agente</h1>
+            <p>Completa los datos para registrar un nuevo agente.</p>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm mx-auto" style="max-width: 750px;">
-
-        <div class="card-header bg-primary text-white p-4">
-            <div class="d-flex align-items-center gap-3">
-                <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                    <i class="bi bi-person-plus fs-3"></i>
-                </div>
-
-                <div>
-                    <h4 class="mb-1 fw-bold">Registrar agente</h4>
-                    <p class="mb-0 text-white-50">
-                        Completa los datos para registrar un nuevo agente.
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="agente-form-card">
 
         <EditForm Model="agente" OnValidSubmit="@Guardar">
             <DataAnnotationsValidator />
 
-            <div class="card-body p-4">
+            <div class="agente-form-body">
 
-                <h6 class="fw-bold text-primary mb-3">
-                    <i class="bi bi-person-vcard me-2"></i>Informacion del agente
-                </h6>
+                <h5 class="agente-section-title">
+                    <i class="bi bi-person-vcard me-2"></i>
+                    Informacion del agente
+                </h5>
 
-                <hr />
+                <p class="agente-section-description">
+                    Introduce el nombre y el codigo correspondiente al agente.
+                </p>
+
+                <hr class="agente-form-divider" />
 
                 <div class="row g-4">
 
-                    <div class="col-12">
-                        <label class="form-label fw-semibold">Nombre</label>
+                    <div class="col-12 agente-field">
+                        <label>Nombre</label>
 
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-person"></i>
                             </span>
 
@@ -62,11 +62,11 @@
                         <ValidationMessage For="@(() => agente.Nombre)" />
                     </div>
 
-                    <div class="col-12">
-                        <label class="form-label fw-semibold">Codigo</label>
+                    <div class="col-12 agente-field">
+                        <label>Codigo</label>
 
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-upc-scan"></i>
                             </span>
 
@@ -79,25 +79,27 @@
                     </div>
 
                 </div>
+
             </div>
 
-            <div class="card-footer bg-white p-4">
-                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+            <div class="agente-form-footer">
 
-                    <a href="/Agentes/Index" class="btn btn-outline-secondary px-4">
-                        Cancelar
-                    </a>
+                <a href="/Agentes/Index" class="agente-btn-cancel">
+                    <i class="bi bi-x-lg"></i>
+                    Cancelar
+                </a>
 
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-floppy me-2"></i>Guardar agente
-                    </button>
+                <button type="submit" class="agente-btn-save">
+                    <i class="bi bi-floppy"></i>
+                    Guardar agente
+                </button>
 
-                </div>
             </div>
 
         </EditForm>
 
     </div>
+
 </div>
 
 @code {

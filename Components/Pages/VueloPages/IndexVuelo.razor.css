@@ -1,0 +1,371 @@
+﻿.vuelos-index-page {
+    padding: 1.5rem 0;
+    color: #263449;
+}
+
+.vuelos-index-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.vuelos-index-back {
+    color: #64748b;
+    font-size: .9rem;
+    text-decoration: none;
+}
+
+    .vuelos-index-back:hover {
+        color: #0d6efd;
+    }
+
+.vuelos-index-tag {
+    display: inline-block;
+    padding: .4rem .7rem;
+    margin-bottom: .65rem;
+    border-radius: 7px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .07em;
+}
+
+.vuelos-index-header h2 {
+    margin-bottom: .35rem;
+    color: #172b4d;
+    font-size: 1.8rem;
+    font-weight: 750;
+}
+
+.vuelos-index-header p {
+    margin: 0;
+    color: #7b8798;
+    font-size: .92rem;
+}
+
+.vuelos-index-btn-new {
+    min-height: 43px;
+    padding: .7rem 1.2rem;
+    border-radius: 8px;
+    background: #0d6efd;
+    color: white;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+    .vuelos-index-btn-new:hover {
+        background: #0b5ed7;
+        color: white;
+    }
+
+.vuelos-index-stats {
+    display: grid;
+    grid-template-columns: minmax(220px, 340px);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.vuelos-index-stat-card {
+    display: flex;
+    min-height: 112px;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.35rem 1.5rem;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 3px 14px rgba(25, 42, 70, .045);
+}
+
+    .vuelos-index-stat-card span {
+        color: #7b8798;
+        font-size: .85rem;
+    }
+
+    .vuelos-index-stat-card h3 {
+        margin: .3rem 0 0;
+        color: #172b4d;
+        font-size: 1.8rem;
+        font-weight: 800;
+    }
+
+.vuelos-index-stat-icon,
+.vuelos-index-section-icon {
+    display: grid;
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+    place-items: center;
+    border-radius: 12px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    font-size: 1.45rem;
+}
+
+.vuelos-index-card {
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    border: 1px solid #edf0f5;
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 3px 14px rgba(25, 42, 70, .045);
+}
+
+.vuelos-index-card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.35rem 1.5rem;
+    border-bottom: 1px solid #edf0f5;
+}
+
+    .vuelos-index-card-header h5 {
+        margin: 0 0 .3rem;
+        color: #263449;
+        font-size: 1.02rem;
+        font-weight: 750;
+    }
+
+    .vuelos-index-card-header p {
+        margin: 0;
+        color: #7b8798;
+        font-size: .85rem;
+    }
+
+.vuelos-index-card-body {
+    padding: 1.5rem;
+}
+
+.vuelos-index-label {
+    display: block;
+    margin-bottom: .5rem;
+    color: #344256;
+    font-size: .88rem;
+    font-weight: 650;
+}
+
+.vuelos-index-input {
+    min-height: 43px;
+    border-color: #dfe5ed;
+    border-radius: 8px;
+    color: #344256;
+    font-size: .9rem;
+}
+
+    .vuelos-index-input:focus {
+        border-color: #86b7fe;
+        box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+    }
+
+.vuelos-index-input-icon {
+    border-color: #dfe5ed;
+    background: #f7f9fc;
+    color: #64748b;
+}
+
+.vuelos-index-btn-search {
+    border-radius: 0 8px 8px 0;
+    background: #0d6efd;
+    color: white;
+    font-weight: 650;
+}
+
+    .vuelos-index-btn-search:hover {
+        background: #0b5ed7;
+        color: white;
+    }
+
+.vuelos-index-filter-actions {
+    display: flex;
+    width: 100%;
+    gap: .5rem;
+}
+
+.vuelos-index-btn-filter,
+.vuelos-index-btn-clear {
+    min-height: 43px;
+    flex: 1;
+    border: 1px solid #d7dee8;
+    border-radius: 8px;
+}
+
+.vuelos-index-btn-filter {
+    border-color: #0d6efd;
+    color: #0d6efd;
+}
+
+    .vuelos-index-btn-filter:hover {
+        background: #0d6efd;
+        color: white;
+    }
+
+.vuelos-index-btn-clear {
+    color: #64748b;
+}
+
+    .vuelos-index-btn-clear:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+.vuelos-index-list-header {
+    justify-content: space-between;
+}
+
+.vuelos-index-records {
+    padding: .45rem .75rem;
+    border-radius: 20px;
+    background: #eaf2ff;
+    color: #0d6efd;
+    font-size: .78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.vuelos-index-table-container {
+    min-height: 180px;
+}
+
+.vuelos-index-table {
+    margin: 0;
+    color: #344256;
+    font-size: .88rem;
+}
+
+    .vuelos-index-table thead th {
+        padding: .9rem;
+        border-bottom: 1px solid #e8edf4;
+        background: #f7f9fc;
+        color: #64748b;
+        font-size: .74rem;
+        font-weight: 750;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    .vuelos-index-table tbody td {
+        padding: .9rem;
+        border-color: #edf0f5;
+        vertical-align: middle;
+    }
+
+    .vuelos-index-table tbody tr:hover {
+        background: #f8fbff;
+    }
+
+.vuelos-index-btn-edit {
+    border: 1px solid #cfe0ff;
+    border-radius: 7px;
+    color: #0d6efd;
+    font-weight: 600;
+}
+
+    .vuelos-index-btn-edit:hover {
+        background: #0d6efd;
+        color: white;
+    }
+
+.vuelos-index-loading,
+.vuelos-index-empty {
+    display: flex;
+    min-height: 230px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+    .vuelos-index-loading p {
+        margin: 1rem 0 0;
+        color: #7b8798;
+    }
+
+.vuelos-index-empty-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    margin-bottom: .9rem;
+    place-items: center;
+    border-radius: 15px;
+    background: #f1f5f9;
+    color: #94a3b8;
+    font-size: 1.8rem;
+}
+
+.vuelos-index-empty h5 {
+    margin-bottom: .35rem;
+    color: #344256;
+    font-size: 1rem;
+    font-weight: 750;
+}
+
+.vuelos-index-empty p {
+    margin: 0 0 1rem;
+    color: #7b8798;
+    font-size: .86rem;
+}
+
+.vuelos-index-btn-clear-list {
+    border: 1px solid #cfe0ff;
+    border-radius: 8px;
+    color: #0d6efd;
+}
+
+    .vuelos-index-btn-clear-list:hover {
+        background: #0d6efd;
+        color: white;
+    }
+
+.vuelos-index-table-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #edf0f5;
+    color: #7b8798;
+    font-size: .83rem;
+}
+
+    .vuelos-index-table-footer ::deep nav {
+        margin: 0;
+    }
+
+@media (max-width: 767.98px) {
+    .vuelos-index-header {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+        .vuelos-index-header h2 {
+            font-size: 1.5rem;
+        }
+
+    .vuelos-index-btn-new {
+        width: 100%;
+        text-align: center;
+    }
+
+    .vuelos-index-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .vuelos-index-card-header,
+    .vuelos-index-card-body {
+        padding: 1rem;
+    }
+
+    .vuelos-index-list-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .vuelos-index-table-footer {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

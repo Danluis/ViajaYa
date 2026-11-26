@@ -10,63 +10,63 @@
 
 <PageTitle>Editar Hotel - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="hotel-edit-page">
 
-    <div class="mb-4">
-        <a href="/Hoteles/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a hoteles
-        </a>
-    </div>
+    <a href="/Hoteles/Index" class="hotel-back-link">
+        <i class="bi bi-arrow-left me-2"></i>Volver a hoteles
+    </a>
 
     @if (hotel.HotelId == 0)
     {
-        <div class="text-center py-5">
-            <div class="spinner-border text-primary"></div>
-            <p class="text-muted mt-3">Cargando informacion del hotel...</p>
+        <div class="hotel-loading">
+            <div class="spinner-border"></div>
+            <p class="mt-3">Cargando informacion del hotel...</p>
         </div>
     }
     else
     {
-        <div class="card border-0 shadow-sm mx-auto" style="max-width: 850px;">
-
-            <div class="card-header bg-primary text-white p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                        <i class="bi bi-building fs-3"></i>
-                    </div>
-
-                    <div>
-                        <h4 class="mb-1 fw-bold">Editar hotel</h4>
-                        <p class="mb-0 text-white-50">
-                            Modifica la informacion del hotel seleccionado.
-                        </p>
-                    </div>
-                </div>
+        <div class="hotel-edit-header">
+            <div class="header-icon">
+                <i class="bi bi-building"></i>
             </div>
+
+            <div>
+                <h1>Editar hotel</h1>
+                <p>Modifica la informacion del hotel seleccionado.</p>
+            </div>
+        </div>
+
+        <div class="hotel-edit-card">
 
             <EditForm Model="hotel" OnValidSubmit="@Modificar">
                 <DataAnnotationsValidator />
 
-                <div class="card-body p-4">
+                <div class="hotel-edit-body">
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-primary mb-0">
-                            <i class="bi bi-info-circle me-2"></i>Informacion basica
-                        </h6>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+                        <div>
+                            <h5 class="hotel-section-title">
+                                <i class="bi bi-info-circle"></i>
+                                Informacion basica
+                            </h5>
+                            <p class="hotel-section-description">
+                                Actualiza los datos principales del establecimiento.
+                            </p>
+                        </div>
 
-                        <span class="badge bg-primary-subtle text-primary">
+                        <span class="hotel-id-badge">
                             Hotel #@hotel.HotelId
                         </span>
                     </div>
 
-                    <hr />
+                    <hr class="hotel-form-divider" />
 
-                    <div class="row g-4">
+                    <div class="row g-3">
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label fw-semibold">Nombre del hotel</label>
+                        <div class="col-12 col-md-6 hotel-field">
+                            <label>Nombre del hotel</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-building"></i>
                                 </span>
                                 <InputText class="form-control"
@@ -76,10 +76,10 @@
                             <ValidationMessage For="@(() => hotel.Nombre)" />
                         </div>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label fw-semibold">Direccion</label>
+                        <div class="col-12 col-md-6 hotel-field">
+                            <label>Direccion</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-geo-alt"></i>
                                 </span>
                                 <InputText class="form-control"
@@ -89,10 +89,10 @@
                             <ValidationMessage For="@(() => hotel.Direccion)" />
                         </div>
 
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Destino</label>
+                        <div class="col-12 hotel-field">
+                            <label>Destino</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-geo-alt-fill"></i>
                                 </span>
                                 <InputSelect class="form-select" @bind-Value="hotel.DestinoId">
@@ -108,19 +108,23 @@
 
                     </div>
 
-                    <div class="mb-4 mt-5">
-                        <h6 class="fw-bold text-primary">
-                            <i class="bi bi-graph-up me-2"></i>Detalles del hotel
-                        </h6>
-                        <hr />
-                    </div>
+                    <hr class="hotel-form-divider" />
 
-                    <div class="row g-4">
+                    <h5 class="hotel-section-title">
+                        <i class="bi bi-graph-up"></i>
+                        Detalles del hotel
+                    </h5>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label fw-semibold">Categoria (estrellas)</label>
+                    <p class="hotel-section-description">
+                        Modifica la categoria, disponibilidad y precio.
+                    </p>
+
+                    <div class="row g-3">
+
+                        <div class="col-12 col-md-6 hotel-field">
+                            <label>Categoria (estrellas)</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-star-fill"></i>
                                 </span>
                                 <InputNumber class="form-control"
@@ -130,10 +134,10 @@
                             <ValidationMessage For="@(() => hotel.Categoria)" />
                         </div>
 
-                        <div class="col-12 col-md-6">
-                            <label class="form-label fw-semibold">Habitaciones disponibles</label>
+                        <div class="col-12 col-md-6 hotel-field">
+                            <label>Habitaciones disponibles</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-door-closed"></i>
                                 </span>
                                 <InputNumber class="form-control"
@@ -143,10 +147,10 @@
                             <ValidationMessage For="@(() => hotel.HabitacionesDisponibles)" />
                         </div>
 
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Precio por noche</label>
+                        <div class="col-12 hotel-field">
+                            <label>Precio por noche</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-currency-dollar"></i>
                                 </span>
                                 <InputNumber class="form-control"
@@ -160,15 +164,20 @@
 
                 </div>
 
-                <div class="card-footer bg-light p-4 d-flex gap-2 justify-content-end">
-                    <a href="/Hoteles/Index" class="btn btn-outline-secondary">
-                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                <div class="hotel-edit-footer">
+                    <a href="/Hoteles/Index" class="hotel-btn-cancel">
+                        <i class="bi bi-x-lg"></i>
+                        Cancelar
                     </a>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="bi bi-check-lg me-2"></i>Guardar cambios
+
+                    <button type="submit" class="hotel-btn-save">
+                        <i class="bi bi-check-lg"></i>
+                        Guardar cambios
                     </button>
-                    <button type="button" class="btn btn-danger" @onclick="Eliminar">
-                        <i class="bi bi-trash me-2"></i>Eliminar
+
+                    <button type="button" class="hotel-btn-delete" @onclick="Eliminar">
+                        <i class="bi bi-trash"></i>
+                        Eliminar
                     </button>
                 </div>
 
@@ -178,23 +187,53 @@
     }
 </div>
 
-<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar eliminacion</h5>
-                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Esta seguro de eliminar este hotel? Esta accion no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+@if (mostrarModal)
+{
+    <div class="hotel-modal modal fade show d-block"
+         tabindex="-1"
+         style="background-color: rgba(0,0,0,0.5);">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                        Confirmar eliminacion
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CerrarModal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Esta seguro de eliminar este hotel?
+                        Esta accion no se puede deshacer.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="ConfirmarEliminar">
+                        <i class="bi bi-trash me-2"></i>
+                        Eliminar
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
-</div>
+}
 
 @code {
     [Parameter]
@@ -210,6 +249,7 @@
         destinos = resultadoDestinos.IsSuccess ? resultadoDestinos.Value! : new List<Destino>();
 
         var resultado = await HotelService.Buscar(HotelId);
+
         if (resultado.IsSuccess && resultado.Value is not null)
         {
             hotel = resultado.Value;

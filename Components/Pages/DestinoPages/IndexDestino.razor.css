@@ -1,22 +1,28 @@
 
 .destinos-page {
     width: 100%;
+    padding: 10px 0;
 }
+
+/* Encabezado */
 
 .destinos-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
+    align-items: center;
     gap: 20px;
     margin-bottom: 28px;
 }
 
 .back-link {
-    display: inline-block;
-    margin-bottom: 20px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
     color: #64748b;
     text-decoration: none;
-    font-size: 13px;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    transition: color 0.2s ease;
 }
 
     .back-link:hover {
@@ -25,86 +31,101 @@
 
 .section-tag {
     display: block;
+    width: fit-content;
     color: #2563eb;
-    font-size: 11px;
+    background: #eff6ff;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.72rem;
     font-weight: 700;
-    letter-spacing: 1.4px;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
 }
 
 .destinos-header h1 {
-    margin: 8px 0;
     color: #172554;
-    font-size: 32px;
-    font-weight: 750;
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 7px;
 }
 
 .destinos-header p {
-    margin: 0;
     color: #64748b;
+    margin: 0;
+    font-size: 0.95rem;
 }
 
 .btn-new-destino {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 9px;
-    padding: 12px 18px;
-    border-radius: 10px;
     background: #2563eb;
     color: white;
     text-decoration: none;
-    font-size: 14px;
+    padding: 12px 20px;
+    border-radius: 10px;
     font-weight: 600;
     white-space: nowrap;
+    transition: background 0.2s ease, transform 0.2s ease;
 }
 
     .btn-new-destino:hover {
         background: #1d4ed8;
         color: white;
+        transform: translateY(-2px);
     }
+
+/* Estadisticas */
 
 .destinos-stats {
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 16px;
     width: fit-content;
-    min-width: 210px;
-    padding: 17px 22px;
-    margin-bottom: 22px;
+    min-width: 220px;
+    padding: 18px 24px;
+    margin-bottom: 25px;
     background: white;
-    border: 1px solid #e5eaf1;
-    border-radius: 13px;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(15, 23, 42, 0.04);
 }
 
 .stat-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 45px;
-    height: 45px;
+    width: 48px;
+    height: 48px;
     border-radius: 12px;
-    background: #dbeafe;
+    background: #eff6ff;
     color: #2563eb;
-    font-size: 21px;
+    font-size: 1.4rem;
 }
 
 .destinos-stats span {
     display: block;
     color: #64748b;
-    font-size: 12px;
+    font-size: 0.82rem;
+    margin-bottom: 3px;
 }
 
 .destinos-stats strong {
     display: block;
     color: #172554;
-    font-size: 23px;
+    font-size: 1.5rem;
+    font-weight: 800;
 }
 
+/* Tarjeta principal */
+
 .destinos-card {
-    padding: 25px;
     background: white;
-    border: 1px solid #e5eaf1;
+    border: 1px solid #e2e8f0;
     border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(15, 23, 42, .03);
+    padding: 25px;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
 }
 
 .card-heading {
@@ -116,70 +137,99 @@
 }
 
     .card-heading h2 {
-        margin: 0 0 5px;
         color: #172554;
-        font-size: 19px;
-        font-weight: 700;
+        font-size: 1.2rem;
+        font-weight: 750;
+        margin: 0 0 5px;
     }
 
     .card-heading p {
-        margin: 0;
         color: #64748b;
-        font-size: 13px;
+        font-size: 0.88rem;
+        margin: 0;
     }
 
 .records-badge {
-    padding: 7px 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 8px 13px;
     border-radius: 20px;
     background: #eff6ff;
     color: #2563eb;
-    font-size: 12px;
+    font-size: 0.8rem;
+    font-weight: 700;
     white-space: nowrap;
 }
 
+/* Busqueda */
+
 .search-panel {
     display: grid;
-    grid-template-columns: minmax(180px, 1fr) minmax(250px, 2fr);
+    grid-template-columns: minmax(160px, 220px) 1fr;
     gap: 18px;
+    align-items: end;
     padding: 18px;
-    margin-bottom: 24px;
-    border-radius: 12px;
+    margin-bottom: 25px;
     background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
 }
 
 .filter-field label,
 .search-field label {
     display: block;
-    margin-bottom: 7px;
     color: #334155;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 0.84rem;
+    font-weight: 650;
+    margin-bottom: 8px;
 }
 
-.filter-field .form-select,
-.search-field .form-control {
+.search-panel .form-select,
+.search-panel .form-control {
     min-height: 43px;
-    border-color: #dbe2ea;
+    border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 13px;
+    font-size: 0.9rem;
+    box-shadow: none;
+}
+
+    .search-panel .form-select:focus,
+    .search-panel .form-control:focus {
+        border-color: #60a5fa;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
+
+.search-field .input-group {
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.search-field .form-control {
+    min-width: 0;
+    border-radius: 8px 0 0 8px;
 }
 
 .btn-search {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 0 17px;
-    border: none;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 18px;
+    border: 0;
     border-radius: 0 8px 8px 0;
     background: #2563eb;
     color: white;
-    font-size: 13px;
     font-weight: 600;
+    white-space: nowrap;
+    transition: background 0.2s ease;
 }
 
     .btn-search:hover {
         background: #1d4ed8;
     }
+
+/* Tabla */
 
 .table-responsive {
     width: 100%;
@@ -188,113 +238,135 @@
 
 ::deep .destinos-table {
     width: 100%;
-    min-width: 720px;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.9rem;
 }
 
     ::deep .destinos-table thead th {
-        padding: 14px 12px;
-        background: #f1f5f9;
+        padding: 15px 13px;
+        background: #f8fafc;
         color: #475569;
-        font-size: 12px;
-        font-weight: 700;
+        font-size: 0.77rem;
+        font-weight: 750;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid #e2e8f0;
         white-space: nowrap;
     }
 
     ::deep .destinos-table tbody td {
-        padding: 15px 12px;
-        border-bottom: 1px solid #edf0f4;
+        padding: 15px 13px;
         color: #334155;
-        font-size: 13px;
+        border-bottom: 1px solid #f1f5f9;
         vertical-align: middle;
     }
 
-    ::deep .destinos-table tbody tr:hover {
+    ::deep .destinos-table tbody tr:hover td {
         background: #f8fafc;
+    }
+
+    ::deep .destinos-table tbody tr:last-child td {
+        border-bottom: 0;
     }
 
 .btn-edit-destino {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 7px 11px;
-    border: 1px solid #bfdbfe;
-    border-radius: 7px;
+    gap: 7px;
+    padding: 8px 12px;
     background: #eff6ff;
     color: #2563eb;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
     text-decoration: none;
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 0.82rem;
+    font-weight: 650;
     white-space: nowrap;
+    transition: all 0.2s ease;
 }
 
     .btn-edit-destino:hover {
-        background: #dbeafe;
-        color: #1d4ed8;
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
     }
+
+/* Estados */
+
+.loading-state,
+.empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 55px 20px;
+    text-align: center;
+}
+
+    .loading-state p {
+        color: #64748b;
+        margin-top: 15px;
+    }
+
+    .empty-state > i {
+        color: #94a3b8;
+        font-size: 2.8rem;
+        margin-bottom: 12px;
+    }
+
+    .empty-state h3 {
+        color: #334155;
+        font-size: 1.1rem;
+        font-weight: 700;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 0.9rem;
+    }
+
+/* Pie de tabla */
 
 .table-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
     gap: 15px;
-    margin-top: 20px;
-    color: #64748b;
-    font-size: 12px;
+    padding-top: 20px;
+    margin-top: 10px;
+    border-top: 1px solid #e2e8f0;
 }
 
-.loading-state,
-.empty-state {
-    padding: 45px 15px;
-    text-align: center;
-    color: #64748b;
-}
-
-    .loading-state p {
-        margin-top: 12px;
+    .table-footer span {
+        color: #64748b;
+        font-size: 0.84rem;
     }
 
-    .empty-state > i {
-        color: #94a3b8;
-        font-size: 38px;
-    }
-
-    .empty-state h3 {
-        margin-top: 12px;
-        color: #334155;
-        font-size: 17px;
-    }
-
-    .empty-state p {
-        font-size: 13px;
-    }
+/* Responsive */
 
 @media (max-width: 700px) {
     .destinos-header {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
     }
 
     .btn-new-destino {
         width: 100%;
-        justify-content: center;
-    }
-
-    .destinos-header h1 {
-        font-size: 27px;
-    }
-
-    .destinos-card {
-        padding: 16px;
     }
 
     .search-panel {
         grid-template-columns: 1fr;
     }
 
+    .destinos-card {
+        padding: 16px;
+    }
+
     .card-heading {
-        align-items: flex-start;
         flex-direction: column;
+        align-items: flex-start;
     }
 
     .table-footer {
@@ -302,11 +374,7 @@
         align-items: flex-start;
     }
 
-    ::deep .destinos-table {
-        min-width: 100%;
-    }
-
-    .records-badge {
+    .destinos-stats {
         width: 100%;
     }
 }
