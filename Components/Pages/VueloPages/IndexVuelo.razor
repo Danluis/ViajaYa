@@ -5,82 +5,281 @@
 @inject VueloService VueloService
 @rendermode InteractiveServer
 
-<PageTitle>Consulta de Vuelos</PageTitle>
+<PageTitle>Vuelos - ViajaYa</PageTitle>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Consulta de Vuelos</h5>
-            <a href="/Vuelos/Create" class="btn btn-primary">
-                <span class="bi bi-plus-circle"></span> Nuevo Vuelo
+<div class="container-fluid py-4 px-3 px-lg-4">
+
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+
+        <div>
+            <a href="/" class="text-decoration-none text-secondary small">
+                <i class="bi bi-arrow-left me-2"></i>Volver al inicio
             </a>
+
+            <div class="mt-3">
+                <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
+                    GESTION DEL SISTEMA
+                </span>
+
+                <h2 class="fw-bold mb-1">Gestion de vuelos</h2>
+                <p class="text-muted mb-0">
+                    Consulta, busca y administra los vuelos registrados.
+                </p>
+            </div>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-3">
-                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
+
+        <a href="/Vuelos/Create" class="btn btn-primary px-4 py-2">
+            <i class="bi bi-plus-circle me-2"></i>Nuevo vuelo
+        </a>
+
+    </div>
+
+    <div class="row g-3 mb-4">
+
+        <div class="col-12 col-sm-6 col-xl-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center">
+
+                        <div>
+                            <p class="text-muted mb-1">Total de vuelos</p>
+                            <h3 class="fw-bold mb-0">
+                                @(vuelos?.Count ?? 0)
+                            </h3>
+                        </div>
+
+                        <div class="rounded-3 bg-primary bg-opacity-10 p-3">
+                            <i class="bi bi-airplane-engines text-primary fs-3"></i>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+
+        <div class="card-header bg-white border-0 p-4">
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-funnel text-primary me-2"></i>Busqueda y filtros
+            </h5>
+            <p class="text-muted small mb-0">
+                Utiliza los filtros para encontrar los vuelos que necesitas.
+            </p>
+        </div>
+
+        <div class="card-body px-4 pb-4">
+
+            <div class="row g-3">
+
+                <div class="col-12 col-md-4">
+                    <label class="form-label fw-semibold">Filtrar por</label>
+
                     <select class="form-select" @bind="criterioSeleccionado">
-                        <option value="">Elija una opción</option>
-                        <option value="vueloId">Id</option>
+                        <option value="">Elija una opcion</option>
+                        <option value="vueloId">ID del vuelo</option>
                         <option value="numeroVuelo">Numero de vuelo</option>
                         <option value="aerolinea">Aerolinea</option>
                         <option value="destino">Destino</option>
                     </select>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Busqueda</label>
+
+                <div class="col-12 col-md-8">
+                    <label class="form-label fw-semibold">Buscar vuelo</label>
+
                     <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar"
-                               @bind="textoBusqueda" @bind:event="oninput"
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-search"></i>
+                        </span>
+
+                        <input type="text"
+                               class="form-control"
+                               placeholder="Escribe el dato que deseas buscar..."
+                               @bind="textoBusqueda"
+                               @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
-                        <button class="btn btn-outline-secondary" @onclick="Buscar">
-                            <span class="bi bi-search"></span>
+
+                        <button type="button"
+                                class="btn btn-primary"
+                                @onclick="Buscar">
+                            Buscar
                         </button>
                     </div>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">Desde</label>
-                    <input type="date" class="form-control" @bind="fechaDesde" />
+
+                <div class="col-12 col-md-5">
+                    <label class="form-label fw-semibold">Fecha de salida desde</label>
+
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-calendar-event"></i>
+                        </span>
+
+                        <input type="date"
+                               class="form-control"
+                               @bind="fechaDesde" />
+                    </div>
                 </div>
-                <div class="col-md-2">
-                    <label class="form-label">Hasta</label>
-                    <input type="date" class="form-control" @bind="fechaHasta" />
+
+                <div class="col-12 col-md-5">
+                    <label class="form-label fw-semibold">Fecha de salida hasta</label>
+
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="bi bi-calendar-check"></i>
+                        </span>
+
+                        <input type="date"
+                               class="form-control"
+                               @bind="fechaHasta" />
+                    </div>
                 </div>
-                <div class="col-md-1 d-flex align-items-end">
-                    <button class="btn btn-outline-secondary w-100" @onclick="Buscar">
-                        <span class="bi bi-calendar-check"></span>
-                    </button>
+
+                <div class="col-12 col-md-2 d-flex align-items-end">
+                    <div class="d-flex gap-2 w-100">
+                        <button type="button"
+                                class="btn btn-outline-primary flex-grow-1"
+                                title="Aplicar filtros"
+                                @onclick="Buscar">
+                            <i class="bi bi-filter"></i>
+                        </button>
+
+                        <button type="button"
+                                class="btn btn-outline-secondary flex-grow-1"
+                                title="Limpiar filtros"
+                                @onclick="Limpiar">
+                            <i class="bi bi-eraser"></i>
+                        </button>
+                    </div>
                 </div>
+
             </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 p-4">
+            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                <div>
+                    <h5 class="fw-bold mb-1">Listado de vuelos</h5>
+                    <p class="text-muted small mb-0">
+                        Consulta la informacion de los vuelos registrados.
+                    </p>
+                </div>
+
+                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
+                    @(vuelos?.Count ?? 0) registros
+                </span>
+            </div>
+        </div>
+
+        <div class="card-body p-0">
 
             @if (vuelos is null)
             {
-                <p>Cargando...</p>
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Cargando...</span>
+                    </div>
+                    <p class="text-muted mt-3 mb-0">Cargando vuelos...</p>
+                </div>
+            }
+            else if (vuelos.Count == 0)
+            {
+                <div class="text-center py-5 px-3">
+                    <i class="bi bi-airplane text-muted display-4"></i>
+                    <h5 class="fw-bold mt-3">No hay vuelos disponibles</h5>
+                    <p class="text-muted mb-3">
+                        No se encontraron vuelos con los criterios seleccionados.
+                    </p>
+                    <button class="btn btn-outline-primary" @onclick="Limpiar">
+                        <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar filtros
+                    </button>
+                </div>
             }
             else
             {
-                <QuickGrid Items="@vuelos.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
-                    <PropertyColumn Property="@(v => v.VueloId)" Title="VueloId" Sortable="true" />
-                    <PropertyColumn Property="@(v => v.NumeroVuelo)" Title="Numero" Sortable="true" />
-                    <TemplateColumn Title="Aerolinea">@context.Aerolinea?.Nombre</TemplateColumn>
-                    <TemplateColumn Title="Destino">@($"{context.Destino?.Ciudad}, {context.Destino?.Pais}")</TemplateColumn>
-                    <TemplateColumn Title="Salida">@context.FechaSalida.ToString("dd/MM/yyyy")</TemplateColumn>
-                    <TemplateColumn Title="Llegada">@context.FechaLlegada.ToString("dd/MM/yyyy")</TemplateColumn>
-                    <PropertyColumn Property="@(v => v.AsientosDisponibles)" Title="Asientos" Sortable="true" />
-                    <TemplateColumn Title="Precio">@context.Precio.ToString("C")</TemplateColumn>
-                    <TemplateColumn Title="Opciones">
-                        <a href="@($"/Vuelos/Edit/{context.VueloId}")" class="btn btn-sm btn-outline-primary">
-                            <span class="bi bi-pencil-square"></span> Editar
-                        </a>
-                    </TemplateColumn>
-                </QuickGrid>
+                <div class="table-responsive">
+                    <QuickGrid Items="@vuelos.AsQueryable()"
+                               Pagination="@paginacion"
+                               Class="table table-hover align-middle mb-0">
 
-                <Paginator State="@paginacion" />
+                        <PropertyColumn Property="@(v => v.VueloId)"
+                                        Title="ID"
+                                        Sortable="true" />
 
-                <p class="text-muted">Cantidad: @vuelos.Count</p>
+                        <PropertyColumn Property="@(v => v.NumeroVuelo)"
+                                        Title="Numero"
+                                        Sortable="true" />
+
+                        <TemplateColumn Title="Aerolinea">
+                            <span class="fw-semibold">
+                                @context.Aerolinea?.Nombre
+                            </span>
+                        </TemplateColumn>
+
+                        <TemplateColumn Title="Destino">
+                            <div>
+                                <span class="fw-semibold">
+                                    @context.Destino?.Ciudad
+                                </span>
+                                <div class="text-muted small">
+                                    @context.Destino?.Pais
+                                </div>
+                            </div>
+                        </TemplateColumn>
+
+                        <TemplateColumn Title="Salida">
+                            <span class="text-nowrap">
+                                <i class="bi bi-calendar-event text-primary me-1"></i>
+                                @context.FechaSalida.ToString("dd/MM/yyyy")
+                            </span>
+                        </TemplateColumn>
+
+                        <TemplateColumn Title="Llegada">
+                            <span class="text-nowrap">
+                                <i class="bi bi-calendar-check text-success me-1"></i>
+                                @context.FechaLlegada.ToString("dd/MM/yyyy")
+                            </span>
+                        </TemplateColumn>
+
+                        <PropertyColumn Property="@(v => v.AsientosDisponibles)"
+                                        Title="Asientos"
+                                        Sortable="true" />
+
+                        <TemplateColumn Title="Precio">
+                            <span class="fw-semibold text-success text-nowrap">
+                                @context.Precio.ToString("C")
+                            </span>
+                        </TemplateColumn>
+
+                        <TemplateColumn Title="Opciones">
+                            <a href="@($"/Vuelos/Edit/{context.VueloId}")"
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-pencil-square me-1"></i>Editar
+                            </a>
+                        </TemplateColumn>
+
+                    </QuickGrid>
+                </div>
+
+                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 p-3 border-top">
+
+                    <span class="text-muted small">
+                        Cantidad de vuelos: @vuelos.Count
+                    </span>
+
+                    <Paginator State="@paginacion" />
+
+                </div>
             }
+
         </div>
     </div>
+
 </div>
 
 @code {
@@ -150,5 +349,15 @@
         }
 
         vuelos = lista;
+    }
+
+    private async Task Limpiar()
+    {
+        criterioSeleccionado = "";
+        textoBusqueda = "";
+        fechaDesde = null;
+        fechaHasta = null;
+
+        vuelos = await ObtenerLista(v => true);
     }
 }

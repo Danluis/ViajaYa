@@ -9,104 +9,193 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Modificar Vuelo</PageTitle>
+<PageTitle>Modificar vuelo - ViajaYa</PageTitle>
 
-<EditForm Model="vuelo" OnValidSubmit="@Modificar">
-    <DataAnnotationsValidator />
+<div class="container-fluid py-4 px-3 px-lg-4">
 
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header">
-                <h5>Modificar Vuelo</h5>
+    <div class="mb-4">
+        <a href="/Vuelos/Index" class="text-decoration-none text-secondary small">
+            <i class="bi bi-arrow-left me-2"></i>Volver a vuelos
+        </a>
+
+        <div class="mt-3">
+            <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
+                GESTION DE VUELOS
+            </span>
+            <h2 class="fw-bold mb-1">Modificar vuelo</h2>
+            <p class="text-muted mb-0">
+                Actualiza la informacion del vuelo seleccionado.
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+
+        <div class="card-header bg-white border-0 p-4">
+            <div class="d-flex align-items-center gap-3">
+                <div class="rounded-3 bg-primary bg-opacity-10 p-3">
+                    <i class="bi bi-airplane-engines text-primary fs-3"></i>
+                </div>
+                <div>
+                    <h5 class="fw-bold mb-1">Informacion del vuelo</h5>
+                    <p class="text-muted small mb-0">
+                        Modifica los datos necesarios y guarda los cambios.
+                    </p>
+                </div>
             </div>
+        </div>
 
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label"><strong>Numero de vuelo</strong></label>
-                    <InputText class="form-control" @bind-Value="vuelo.NumeroVuelo" />
-                    <ValidationMessage For="@(() => vuelo.NumeroVuelo)" />
-                </div>
+        <EditForm Model="vuelo" OnValidSubmit="@Modificar">
+            <DataAnnotationsValidator />
 
-                <div class="mb-3">
-                    <label class="form-label"><strong>Aerolinea</strong></label>
-                    <InputSelect class="form-select" @bind-Value="vuelo.AerolineaId">
-                        <option value="0">Seleccione una aerolinea</option>
-                        @foreach (var a in aerolineas)
-                        {
-                            <option value="@a.AerolineaId">@a.Nombre</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => vuelo.AerolineaId)" />
-                </div>
+            <div class="card-body p-4">
 
-                <div class="mb-3">
-                    <label class="form-label"><strong>Destino</strong></label>
-                    <InputSelect class="form-select" @bind-Value="vuelo.DestinoId">
-                        <option value="0">Seleccione un destino</option>
-                        @foreach (var d in destinos)
-                        {
-                            <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
-                        }
-                    </InputSelect>
-                    <ValidationMessage For="@(() => vuelo.DestinoId)" />
-                </div>
+                <div class="row g-4">
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Fecha de salida</strong></label>
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-0">
+                            <i class="bi bi-ticket-perforated me-2"></i>Datos generales
+                        </h6>
+                        <hr class="mt-2" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Numero de vuelo</label>
+                        <InputText class="form-control"
+                                   @bind-Value="vuelo.NumeroVuelo" />
+                        <ValidationMessage For="@(() => vuelo.NumeroVuelo)" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Aerolinea</label>
+                        <InputSelect class="form-select" @bind-Value="vuelo.AerolineaId">
+                            <option value="0">Seleccione una aerolinea</option>
+                            @foreach (var a in aerolineas)
+                            {
+                                <option value="@a.AerolineaId">@a.Nombre</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => vuelo.AerolineaId)" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Destino</label>
+                        <InputSelect class="form-select" @bind-Value="vuelo.DestinoId">
+                            <option value="0">Seleccione un destino</option>
+                            @foreach (var d in destinos)
+                            {
+                                <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => vuelo.DestinoId)" />
+                    </div>
+
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-0 mt-2">
+                            <i class="bi bi-calendar-event me-2"></i>Itinerario
+                        </h6>
+                        <hr class="mt-2" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Fecha de salida</label>
                         <InputDate class="form-control" @bind-Value="vuelo.FechaSalida" />
                         <ValidationMessage For="@(() => vuelo.FechaSalida)" />
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Fecha de llegada</strong></label>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Fecha de llegada</label>
                         <InputDate class="form-control" @bind-Value="vuelo.FechaLlegada" />
                         <ValidationMessage For="@(() => vuelo.FechaLlegada)" />
                     </div>
-                </div>
 
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Asientos disponibles</strong></label>
-                        <InputNumber class="form-control" @bind-Value="vuelo.AsientosDisponibles" />
+                    <div class="col-12">
+                        <h6 class="fw-bold text-primary mb-0 mt-2">
+                            <i class="bi bi-cash-coin me-2"></i>Disponibilidad y precio
+                        </h6>
+                        <hr class="mt-2" />
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Asientos disponibles</label>
+                        <InputNumber class="form-control"
+                                     @bind-Value="vuelo.AsientosDisponibles" />
                         <ValidationMessage For="@(() => vuelo.AsientosDisponibles)" />
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label"><strong>Precio</strong></label>
-                        <InputNumber class="form-control" @bind-Value="vuelo.Precio" />
+
+                    <div class="col-12 col-md-6">
+                        <label class="form-label fw-semibold">Precio</label>
+                        <InputNumber class="form-control"
+                                     @bind-Value="vuelo.Precio" />
                         <ValidationMessage For="@(() => vuelo.Precio)" />
                     </div>
+
                 </div>
             </div>
 
-            <div class="card-footer text-center">
-                <a href="/Vuelos/Index" class="btn btn-secondary">
-                    <span class="bi bi-arrow-left"></span> Volver
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <span class="bi bi-floppy"></span> Modificar
-                </button>
-                <button type="button" class="btn btn-danger" @onclick="Eliminar">
-                    <span class="bi bi-trash"></span> Eliminar
-                </button>
-            </div>
-        </div>
-    </div>
-</EditForm>
+            <div class="card-footer bg-white border-0 p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between gap-2">
 
-<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar eliminacion</h5>
-                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
+                    <button type="button"
+                            class="btn btn-outline-danger px-4"
+                            @onclick="Eliminar">
+                        <i class="bi bi-trash me-2"></i>Eliminar vuelo
+                    </button>
+
+                    <div class="d-flex flex-column flex-sm-row gap-2">
+                        <a href="/Vuelos/Index" class="btn btn-outline-secondary px-4">
+                            <i class="bi bi-x-circle me-2"></i>Cancelar
+                        </a>
+
+                        <button type="submit" class="btn btn-primary px-4">
+                            <i class="bi bi-floppy me-2"></i>Guardar cambios
+                        </button>
+                    </div>
+
+                </div>
             </div>
+        </EditForm>
+    </div>
+</div>
+
+<div class="modal fade @(mostrarModal ? "show d-block" : "")"
+     tabindex="-1"
+     style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
+
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+
+            <div class="modal-header border-0">
+                <h5 class="modal-title fw-bold">
+                    <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                    Confirmar eliminacion
+                </h5>
+                <button type="button"
+                        class="btn-close"
+                        @onclick="CerrarModal">
+                </button>
+            </div>
+
             <div class="modal-body">
-                <p>Esta seguro de eliminar este vuelo? Esta accion no se puede deshacer.</p>
+                <p class="mb-0">
+                    Esta seguro de eliminar este vuelo? Esta accion no se puede deshacer.
+                </p>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
+
+            <div class="modal-footer border-0">
+                <button type="button"
+                        class="btn btn-outline-secondary"
+                        @onclick="CerrarModal">
+                    Cancelar
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        @onclick="ConfirmarEliminar">
+                    <i class="bi bi-trash me-2"></i>Eliminar
+                </button>
             </div>
+
         </div>
     </div>
 </div>
@@ -129,6 +218,7 @@
         destinos = resultadoDestinos.IsSuccess ? resultadoDestinos.Value! : new List<Destino>();
 
         var resultado = await VueloService.Buscar(VueloId);
+
         if (resultado.IsSuccess && resultado.Value is not null)
         {
             vuelo = resultado.Value;

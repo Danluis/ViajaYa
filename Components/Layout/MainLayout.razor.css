@@ -1,4 +1,8 @@
 
+/* =========================================
+   ESTRUCTURA PRINCIPAL
+========================================= */
+
 .app-layout {
     min-height: 100vh;
     display: flex;
@@ -24,6 +28,10 @@
     justify-content: space-between;
     gap: 20px;
 }
+
+/* =========================================
+   LOGO Y MARCA
+========================================= */
 
 .brand {
     display: flex;
@@ -60,6 +68,10 @@
         font-size: 12px;
     }
 
+/* =========================================
+   ACCIONES DEL ENCABEZADO
+========================================= */
+
 .header-actions {
     display: flex;
     align-items: center;
@@ -89,6 +101,7 @@
     text-decoration: none;
     border: none;
     cursor: pointer;
+    transition: all .2s ease;
 }
 
 .btn-login {
@@ -96,15 +109,31 @@
     background: #eff6ff;
 }
 
+    .btn-login:hover {
+        background: #dbeafe;
+    }
+
 .btn-register {
     color: white;
     background: #2563eb;
 }
 
+    .btn-register:hover {
+        background: #1d4ed8;
+    }
+
 .btn-logout {
     color: #dc2626;
     background: #fef2f2;
 }
+
+    .btn-logout:hover {
+        background: #fee2e2;
+    }
+
+/* =========================================
+   CONTENIDO Y PIE DE PAGINA
+========================================= */
 
 .main-content {
     flex: 1;
@@ -126,6 +155,224 @@
     .app-footer p {
         margin: 0;
     }
+
+/* =========================================
+   SPLASH SCREEN
+========================================= */
+
+.splash-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    isolation: isolate;
+    background: radial-gradient(ellipse at 50% 40%, rgba(59, 130, 246, .35), transparent 45%), linear-gradient(135deg, #071b45 0%, #123b83 48%, #172b69 100%);
+    color: white;
+    animation: splash-appear .6s ease both;
+}
+
+    /* Iluminacion ambiental */
+
+    .splash-screen::before {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 650px;
+        height: 650px;
+        top: -300px;
+        right: -180px;
+        border-radius: 50%;
+        background: rgba(96, 165, 250, .12);
+        filter: blur(15px);
+    }
+
+    .splash-screen::after {
+        content: "";
+        position: absolute;
+        z-index: -1;
+        width: 500px;
+        height: 500px;
+        bottom: -300px;
+        left: -120px;
+        border-radius: 50%;
+        background: rgba(124, 58, 237, .16);
+        filter: blur(20px);
+    }
+
+/* Contenido central */
+
+.splash-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 25px;
+    text-align: center;
+    animation: splash-content-appear .9s cubic-bezier(.2, .8, .2, 1) both;
+}
+
+/* Logo */
+
+.splash-logo {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 112px;
+    height: 112px;
+    margin: 0 auto 28px;
+    border: 1px solid rgba(255, 255, 255, .35);
+    border-radius: 30px;
+    background: linear-gradient(145deg, rgba(255,255,255,.22), rgba(255,255,255,.07));
+    box-shadow: 0 20px 55px rgba(0, 0, 0, .25), inset 0 1px 1px rgba(255, 255, 255, .25);
+    backdrop-filter: blur(12px);
+    font-size: 51px;
+    animation: logo-float 3s ease-in-out infinite;
+}
+
+    .splash-logo::before {
+        content: "";
+        position: absolute;
+        inset: -9px;
+        border: 1px solid rgba(147, 197, 253, .22);
+        border-radius: 36px;
+    }
+
+/* Nombre y eslogan */
+
+.splash-content h1 {
+    margin: 0;
+    font-size: clamp(42px, 6vw, 58px);
+    font-weight: 850;
+    letter-spacing: -2px;
+    text-shadow: 0 5px 25px rgba(0, 0, 0, .2);
+}
+
+.splash-content p {
+    margin: 13px 0 40px;
+    color: #dbeafe;
+    font-size: 15px;
+    letter-spacing: .4px;
+}
+
+/* Ruta de vuelo */
+
+.splash-flight {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: min(300px, 75%);
+    height: 45px;
+    margin: 0 auto 25px;
+}
+
+.flight-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    border-radius: 5px;
+    background: linear-gradient(90deg, transparent, rgba(191, 219, 254, .65), transparent);
+}
+
+.splash-flight i {
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    color: #ffffff;
+    font-size: 27px;
+    filter: drop-shadow(0 0 10px rgba(147, 197, 253, .7));
+    animation: airplane-fly 2.2s ease-in-out infinite;
+}
+
+/* Indicador de carga */
+
+.splash-loading {
+    display: inline-block;
+    color: #bfdbfe;
+    font-size: 12px;
+    letter-spacing: 1px;
+    animation: loading-pulse 1.5s ease-in-out infinite;
+}
+
+/* Texto inferior */
+
+.splash-footer {
+    position: absolute;
+    bottom: 32px;
+    color: rgba(255, 255, 255, .55);
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 3px;
+}
+
+/* =========================================
+   ANIMACIONES
+========================================= */
+
+@keyframes splash-appear {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes splash-content-appear {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes logo-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-9px);
+    }
+}
+
+@keyframes airplane-fly {
+    0% {
+        left: 0;
+        transform: translateY(4px) rotate(-5deg);
+    }
+
+    50% {
+        transform: translateY(-6px) rotate(0deg);
+    }
+
+    100% {
+        left: calc(100% - 27px);
+        transform: translateY(4px) rotate(5deg);
+    }
+}
+
+@keyframes loading-pulse {
+    0%, 100% {
+        opacity: .55;
+    }
+
+    50% {
+        opacity: 1;
+    }
+}
+
+/* =========================================
+   RESPONSIVE
+========================================= */
 
 @media (max-width: 600px) {
     .header-container {
@@ -159,5 +406,39 @@
 
     .main-content {
         padding: 18px 12px;
+    }
+
+    .splash-logo {
+        width: 90px;
+        height: 90px;
+        font-size: 42px;
+    }
+
+    .splash-content p {
+        font-size: 13px;
+    }
+
+    .splash-footer {
+        bottom: 24px;
+    }
+}
+
+/* =========================================
+   ACCESIBILIDAD
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+    .splash-screen,
+    .splash-content,
+    .splash-logo,
+    .splash-flight i,
+    .splash-loading {
+        animation: none !important;
+    }
+
+    .btn-login,
+    .btn-register,
+    .btn-logout {
+        transition: none !important;
     }
 }

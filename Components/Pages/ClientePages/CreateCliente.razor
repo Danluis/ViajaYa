@@ -8,94 +8,108 @@
 
 <PageTitle>Nuevo Cliente - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="create-cliente-page">
 
-    <div class="mb-4">
-        <a href="/Clientes/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a clientes
+    <div class="create-navigation">
+        <a href="/Clientes/Index" class="create-back-link">
+            <i class="bi bi-arrow-left"></i>
+            Volver a clientes
         </a>
     </div>
 
-    <div class="card border-0 shadow-sm mx-auto" style="max-width: 850px;">
+    <div class="create-cliente-card">
 
-        <div class="card-header bg-primary text-white p-4">
-            <div class="d-flex align-items-center gap-3">
-                <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                    <i class="bi bi-person-plus-fill fs-3"></i>
-                </div>
+        <div class="create-cliente-header">
+            <div class="header-icon">
+                <i class="bi bi-person-plus-fill"></i>
+            </div>
 
-                <div>
-                    <h4 class="mb-1 fw-bold">Registrar nuevo cliente</h4>
-                    <p class="mb-0 text-white-50">
-                        Completa los datos para agregar un cliente al sistema.
-                    </p>
-                </div>
+            <div>
+                <span class="header-tag">GESTION DE CLIENTES</span>
+                <h1>Registrar nuevo cliente</h1>
+                <p>Completa los datos para agregar un cliente al sistema.</p>
             </div>
         </div>
 
         <EditForm Model="cliente" OnValidSubmit="@Guardar">
             <DataAnnotationsValidator />
 
-            <div class="card-body p-4">
+            <div class="create-cliente-body">
 
-                <div class="mb-4">
-                    <h6 class="fw-bold text-primary">
-                        <i class="bi bi-person-vcard me-2"></i>Informacion personal
-                    </h6>
-                    <hr />
+                <div class="form-section-heading">
+                    <div class="section-icon">
+                        <i class="bi bi-person-vcard"></i>
+                    </div>
+
+                    <div>
+                        <h2>Informacion personal</h2>
+                        <p>Ingresa los datos personales y de contacto.</p>
+                    </div>
                 </div>
 
-                <div class="row g-4">
+                <div class="form-grid">
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Cedula</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
+                    <div class="form-field">
+                        <label>Cedula</label>
+
+                        <div class="custom-input-group">
+                            <span>
                                 <i class="bi bi-card-text"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese la cedula"
                                        @bind-Value="cliente.Cedula" />
                         </div>
+
                         <ValidationMessage For="@(() => cliente.Cedula)" />
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Nombre completo</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
+                    <div class="form-field">
+                        <label>Nombre completo</label>
+
+                        <div class="custom-input-group">
+                            <span>
                                 <i class="bi bi-person"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese el nombre"
                                        @bind-Value="cliente.Nombre" />
                         </div>
+
                         <ValidationMessage For="@(() => cliente.Nombre)" />
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Telefono</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
+                    <div class="form-field">
+                        <label>Telefono</label>
+
+                        <div class="custom-input-group">
+                            <span>
                                 <i class="bi bi-telephone"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese el telefono"
                                        @bind-Value="cliente.Telefono" />
                         </div>
+
                         <ValidationMessage For="@(() => cliente.Telefono)" />
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Correo electronico</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
+                    <div class="form-field">
+                        <label>Correo electronico</label>
+
+                        <div class="custom-input-group">
+                            <span>
                                 <i class="bi bi-envelope"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese el correo"
                                        @bind-Value="cliente.Email" />
                         </div>
+
                         <ValidationMessage For="@(() => cliente.Email)" />
                     </div>
 
@@ -103,18 +117,18 @@
 
             </div>
 
-            <div class="card-footer bg-white p-4">
-                <div class="d-flex flex-column flex-sm-row justify-content-end gap-2">
+            <div class="create-cliente-footer">
 
-                    <a href="/Clientes/Index" class="btn btn-outline-secondary px-4">
-                        <i class="bi bi-x-circle me-2"></i>Cancelar
-                    </a>
+                <a href="/Clientes/Index" class="btn-cancel-client">
+                    <i class="bi bi-x-circle"></i>
+                    Cancelar
+                </a>
 
-                    <button type="submit" class="btn btn-primary px-4">
-                        <i class="bi bi-floppy me-2"></i>Guardar cliente
-                    </button>
+                <button type="submit" class="btn-save-client">
+                    <i class="bi bi-floppy"></i>
+                    Guardar cliente
+                </button>
 
-                </div>
             </div>
 
         </EditForm>
