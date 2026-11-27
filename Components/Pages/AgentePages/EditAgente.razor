@@ -8,64 +8,66 @@
 
 <PageTitle>Editar Agente - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="agente-edit-page">
 
-    <div class="mb-4">
-        <a href="/Agentes/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a agentes
-        </a>
-    </div>
+    <a href="/Agentes/Index" class="agente-edit-back">
+        <i class="bi bi-arrow-left me-2"></i>
+        Volver a agentes
+    </a>
 
     @if (agente.AgenteId == 0)
     {
-        <div class="text-center py-5">
+        <div class="agente-loading">
             <div class="spinner-border text-primary"></div>
-            <p class="text-muted mt-3">Cargando informacion del agente...</p>
+            <p class="mt-3">Cargando informacion del agente...</p>
         </div>
     }
     else
     {
-        <div class="card border-0 shadow-sm mx-auto" style="max-width: 750px;">
-
-            <div class="card-header bg-primary text-white p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                        <i class="bi bi-person-gear fs-3"></i>
-                    </div>
-
-                    <div>
-                        <h4 class="mb-1 fw-bold">Editar agente</h4>
-                        <p class="mb-0 text-white-50">
-                            Modifica la informacion del agente seleccionado.
-                        </p>
-                    </div>
-                </div>
+        <div class="agente-edit-header">
+            <div class="header-icon">
+                <i class="bi bi-person-gear"></i>
             </div>
+
+            <div>
+                <h1>Editar agente</h1>
+                <p>Modifica la informacion del agente seleccionado.</p>
+            </div>
+        </div>
+
+        <div class="agente-edit-card">
 
             <EditForm Model="agente" OnValidSubmit="@Modificar">
                 <DataAnnotationsValidator />
 
-                <div class="card-body p-4">
+                <div class="agente-edit-body">
 
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h6 class="fw-bold text-primary mb-0">
-                            <i class="bi bi-person-vcard me-2"></i>Informacion del agente
-                        </h6>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-3">
+                        <div>
+                            <h5 class="agente-section-title">
+                                <i class="bi bi-person-vcard me-2"></i>
+                                Informacion del agente
+                            </h5>
 
-                        <span class="badge bg-primary-subtle text-primary">
+                            <p class="agente-section-description">
+                                Actualiza el nombre y el codigo del agente.
+                            </p>
+                        </div>
+
+                        <span class="agente-id-badge">
                             Agente #@agente.AgenteId
                         </span>
                     </div>
 
-                    <hr />
+                    <hr class="agente-form-divider" />
 
                     <div class="row g-4">
 
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Nombre</label>
+                        <div class="col-12 agente-edit-field">
+                            <label>Nombre</label>
 
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-person"></i>
                                 </span>
 
@@ -77,11 +79,11 @@
                             <ValidationMessage For="@(() => agente.Nombre)" />
                         </div>
 
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Codigo</label>
+                        <div class="col-12 agente-edit-field">
+                            <label>Codigo</label>
 
                             <div class="input-group">
-                                <span class="input-group-text bg-light">
+                                <span class="input-group-text">
                                     <i class="bi bi-upc-scan"></i>
                                 </span>
 
@@ -94,28 +96,32 @@
                         </div>
 
                     </div>
+
                 </div>
 
-                <div class="card-footer bg-white p-4">
-                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                <div class="agente-edit-footer">
 
-                        <button type="button"
-                                class="btn btn-outline-danger px-4"
-                                @onclick="Eliminar">
-                            <i class="bi bi-trash me-2"></i>Eliminar agente
+                    <button type="button"
+                            class="agente-btn-delete"
+                            @onclick="Eliminar">
+                        <i class="bi bi-trash"></i>
+                        Eliminar agente
+                    </button>
+
+                    <div class="agente-edit-actions">
+
+                        <a href="/Agentes/Index" class="agente-btn-cancel">
+                            <i class="bi bi-x-lg"></i>
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="agente-btn-save">
+                            <i class="bi bi-floppy"></i>
+                            Guardar cambios
                         </button>
 
-                        <div class="d-flex flex-column flex-sm-row gap-2">
-                            <a href="/Agentes/Index" class="btn btn-outline-secondary px-4">
-                                Cancelar
-                            </a>
-
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-floppy me-2"></i>Guardar cambios
-                            </button>
-                        </div>
-
                     </div>
+
                 </div>
 
             </EditForm>
@@ -127,28 +133,25 @@
 
 @if (mostrarModal)
 {
-    <div class="modal fade show d-block"
-         tabindex="-1"
-         style="background-color: rgba(0,0,0,0.5);"
-         role="dialog"
-         aria-modal="true">
+    <div class="agente-modal" role="dialog" aria-modal="true">
 
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
+        <div class="modal-dialog">
+            <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">
+                    <h5 class="modal-title">
                         <i class="bi bi-exclamation-triangle text-danger me-2"></i>
                         Confirmar eliminacion
                     </h5>
 
                     <button type="button"
                             class="btn-close"
+                            aria-label="Cerrar"
                             @onclick="CerrarModal">
                     </button>
                 </div>
 
-                <div class="modal-body py-4">
+                <div class="modal-body">
                     <p class="mb-2">
                         Estas seguro de que deseas eliminar este agente?
                     </p>
@@ -159,6 +162,7 @@
                 </div>
 
                 <div class="modal-footer">
+
                     <button type="button"
                             class="btn btn-outline-secondary"
                             @onclick="CerrarModal">
@@ -168,12 +172,15 @@
                     <button type="button"
                             class="btn btn-danger"
                             @onclick="ConfirmarEliminar">
-                        <i class="bi bi-trash me-2"></i>Eliminar
+                        <i class="bi bi-trash me-2"></i>
+                        Eliminar
                     </button>
+
                 </div>
 
             </div>
         </div>
+
     </div>
 }
 

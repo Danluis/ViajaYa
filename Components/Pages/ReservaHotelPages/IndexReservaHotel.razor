@@ -7,77 +7,57 @@
 
 <PageTitle>Reservas de hotel - ViajaYa</PageTitle>
 
-<div class="container-fluid py-4 px-3 px-lg-4">
+<div class="reservas-page">
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
-
+    <div class="reservas-header">
         <div>
-            <a href="/" class="text-decoration-none text-secondary small">
+            <a href="/" class="reservas-back-link">
                 <i class="bi bi-arrow-left me-2"></i>Volver al inicio
             </a>
 
-            <div class="mt-3">
-                <span class="badge bg-primary bg-opacity-10 text-primary mb-2">
-                    GESTION DEL SISTEMA
-                </span>
-
-                <h2 class="fw-bold mb-1">Reservas de hoteles</h2>
-                <p class="text-muted mb-0">
-                    Consulta, busca y administra las reservas de hoteles registradas.
-                </p>
+            <div class="reservas-heading">
+                <span class="reservas-section-tag">GESTION DEL SISTEMA</span>
+                <h2>Reservas de hoteles</h2>
+                <p>Consulta, busca y administra las reservas de hoteles registradas.</p>
             </div>
         </div>
 
-        <a href="/ReservaHoteles/Create" class="btn btn-primary px-4 py-2">
+        <a href="/ReservaHoteles/Create" class="reservas-btn-new">
             <i class="bi bi-plus-circle me-2"></i>Nueva reserva
         </a>
-
     </div>
 
-    <div class="row g-3 mb-4">
+    <div class="reservas-stats">
+        <div class="reservas-stat-card">
+            <div>
+                <span>Total de reservas</span>
+                <h3>@(reservas?.Count ?? 0)</h3>
+            </div>
+            <div class="reservas-stat-icon">
+                <i class="bi bi-building-check"></i>
+            </div>
+        </div>
+    </div>
 
-        <div class="col-12 col-sm-6 col-xl-4">
-            <div class="card border-0 shadow-sm h-100">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-center">
+    <section class="reservas-card reservas-filter-card">
 
-                        <div>
-                            <p class="text-muted mb-1">Total de reservas</p>
-                            <h3 class="fw-bold mb-0">
-                                @(reservas?.Count ?? 0)
-                            </h3>
-                        </div>
-
-                        <div class="rounded-3 bg-primary bg-opacity-10 p-3">
-                            <i class="bi bi-building-check text-primary fs-3"></i>
-                        </div>
-
-                    </div>
-                </div>
+        <div class="reservas-card-header">
+            <div>
+                <h5>
+                    <i class="bi bi-funnel me-2"></i>Busqueda y filtros
+                </h5>
+                <p>Utiliza los filtros para encontrar una reserva.</p>
             </div>
         </div>
 
-    </div>
-
-    <div class="card border-0 shadow-sm mb-4">
-
-        <div class="card-header bg-white border-0 p-4">
-            <h5 class="fw-bold mb-1">
-                <i class="bi bi-funnel text-primary me-2"></i>Busqueda y filtros
-            </h5>
-            <p class="text-muted small mb-0">
-                Utiliza los filtros para encontrar una reserva.
-            </p>
-        </div>
-
-        <div class="card-body px-4 pb-4">
+        <div class="reservas-filter-body">
 
             <div class="row g-3">
 
                 <div class="col-12 col-md-4">
-                    <label class="form-label fw-semibold">Filtrar por</label>
+                    <label class="reservas-label">Filtrar por</label>
 
-                    <select class="form-select" @bind="criterioSeleccionado">
+                    <select class="form-select reservas-input" @bind="criterioSeleccionado">
                         <option value="">Elija una opcion</option>
                         <option value="reservaId">ID de reserva</option>
                         <option value="cliente">Cliente</option>
@@ -87,117 +67,112 @@
                 </div>
 
                 <div class="col-12 col-md-8">
-                    <label class="form-label fw-semibold">Buscar reserva</label>
+                    <label class="reservas-label">Buscar reserva</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text reservas-input-icon">
                             <i class="bi bi-search"></i>
                         </span>
 
                         <input type="text"
-                               class="form-control"
+                               class="form-control reservas-input"
                                placeholder="Escribe el dato que deseas buscar..."
                                @bind="textoBusqueda"
                                @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
 
                         <button type="button"
-                                class="btn btn-primary"
+                                class="btn reservas-btn-search"
                                 @onclick="Buscar">
-                            Buscar
+                            <i class="bi bi-search me-1"></i>Buscar
                         </button>
                     </div>
                 </div>
 
                 <div class="col-12 col-md-5">
-                    <label class="form-label fw-semibold">Fecha desde</label>
+                    <label class="reservas-label">Fecha desde</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text reservas-input-icon">
                             <i class="bi bi-calendar-event"></i>
                         </span>
 
                         <input type="date"
-                               class="form-control"
+                               class="form-control reservas-input"
                                @bind="fechaDesde" />
                     </div>
                 </div>
 
                 <div class="col-12 col-md-5">
-                    <label class="form-label fw-semibold">Fecha hasta</label>
+                    <label class="reservas-label">Fecha hasta</label>
 
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
+                        <span class="input-group-text reservas-input-icon">
                             <i class="bi bi-calendar-check"></i>
                         </span>
 
                         <input type="date"
-                               class="form-control"
+                               class="form-control reservas-input"
                                @bind="fechaHasta" />
                     </div>
                 </div>
 
                 <div class="col-12 col-md-2 d-flex align-items-end">
                     <div class="d-flex gap-2 w-100">
-
                         <button type="button"
-                                class="btn btn-outline-primary flex-grow-1"
+                                class="btn reservas-btn-filter"
                                 title="Aplicar filtros"
                                 @onclick="Buscar">
                             <i class="bi bi-filter"></i>
                         </button>
 
                         <button type="button"
-                                class="btn btn-outline-secondary flex-grow-1"
+                                class="btn reservas-btn-clear"
                                 title="Limpiar filtros"
                                 @onclick="Limpiar">
                             <i class="bi bi-eraser"></i>
                         </button>
-
                     </div>
                 </div>
 
             </div>
         </div>
-    </div>
+    </section>
 
-    <div class="card border-0 shadow-sm">
+    <section class="reservas-card">
 
-        <div class="card-header bg-white border-0 p-4">
-            <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
-                <div>
-                    <h5 class="fw-bold mb-1">Listado de reservas</h5>
-                    <p class="text-muted small mb-0">
-                        Consulta la informacion de las reservas registradas.
-                    </p>
-                </div>
-
-                <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2">
-                    @(reservas?.Count ?? 0) registros
-                </span>
+        <div class="reservas-card-header reservas-list-header">
+            <div>
+                <h5>Listado de reservas</h5>
+                <p>Consulta la informacion de las reservas registradas.</p>
             </div>
+
+            <span class="reservas-records-badge">
+                @(reservas?.Count ?? 0) registros
+            </span>
         </div>
 
-        <div class="card-body p-0">
+        <div class="reservas-table-container">
 
             @if (reservas is null)
             {
-                <div class="text-center py-5">
+                <div class="reservas-loading">
                     <div class="spinner-border text-primary" role="status">
                         <span class="visually-hidden">Cargando...</span>
                     </div>
-                    <p class="text-muted mt-3 mb-0">Cargando reservas...</p>
+                    <p>Cargando reservas...</p>
                 </div>
             }
             else if (reservas.Count == 0)
             {
-                <div class="text-center py-5 px-3">
-                    <i class="bi bi-journal-x text-muted display-4"></i>
-                    <h5 class="fw-bold mt-3">No hay reservas disponibles</h5>
-                    <p class="text-muted mb-3">
-                        No se encontraron reservas con los criterios seleccionados.
-                    </p>
-                    <button class="btn btn-outline-primary" @onclick="Limpiar">
+                <div class="reservas-empty">
+                    <div class="reservas-empty-icon">
+                        <i class="bi bi-journal-x"></i>
+                    </div>
+                    <h5>No hay reservas disponibles</h5>
+                    <p>No se encontraron reservas con los criterios seleccionados.</p>
+
+                    <button class="btn reservas-btn-clear-empty" @onclick="Limpiar">
                         <i class="bi bi-arrow-counterclockwise me-2"></i>Limpiar filtros
                     </button>
                 </div>
@@ -207,7 +182,7 @@
                 <div class="table-responsive">
                     <QuickGrid Items="@reservas.AsQueryable()"
                                Pagination="@paginacion"
-                               Class="table table-hover align-middle mb-0">
+                               Class="table table-hover align-middle reservas-table">
 
                         <PropertyColumn Property="@(r => r.ReservaHotelId)"
                                         Title="ID"
@@ -242,7 +217,7 @@
 
                         <TemplateColumn Title="Opciones">
                             <a href="@($"/ReservaHoteles/Edit/{context.ReservaHotelId}")"
-                               class="btn btn-sm btn-outline-primary">
+                               class="btn btn-sm reservas-btn-edit">
                                 <i class="bi bi-pencil-square me-1"></i>Editar
                             </a>
                         </TemplateColumn>
@@ -250,19 +225,14 @@
                     </QuickGrid>
                 </div>
 
-                <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-3 p-3 border-top">
-
-                    <span class="text-muted small">
-                        Cantidad de reservas: @reservas.Count
-                    </span>
-
+                <div class="reservas-table-footer">
+                    <span>Cantidad de reservas: @reservas.Count</span>
                     <Paginator State="@paginacion" />
-
                 </div>
             }
 
         </div>
-    </div>
+    </section>
 
 </div>
 

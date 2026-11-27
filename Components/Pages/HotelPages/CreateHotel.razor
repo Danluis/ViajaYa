@@ -10,135 +10,158 @@
 
 <PageTitle>Nuevo Hotel - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="hotel-form-page">
 
-    <div class="mb-4">
-        <a href="/Hoteles/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a hoteles
-        </a>
+    <a href="/Hoteles/Index" class="hotel-back-link">
+        <i class="bi bi-arrow-left me-2"></i>Volver a hoteles
+    </a>
+
+    <div class="hotel-form-header">
+        <div class="header-icon">
+            <i class="bi bi-building-add"></i>
+        </div>
+
+        <div>
+            <h1>Registrar nuevo hotel</h1>
+            <p>Completa los datos para agregar un hotel al sistema.</p>
+        </div>
     </div>
 
-    <div class="card border-0 shadow-sm mx-auto" style="max-width: 850px;">
-
-        <div class="card-header bg-primary text-white p-4">
-            <div class="d-flex align-items-center gap-3">
-                <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                    <i class="bi bi-building-add fs-3"></i>
-                </div>
-
-                <div>
-                    <h4 class="mb-1 fw-bold">Registrar nuevo hotel</h4>
-                    <p class="mb-0 text-white-50">
-                        Completa los datos para agregar un hotel al sistema.
-                    </p>
-                </div>
-            </div>
-        </div>
+    <div class="hotel-form-card">
 
         <EditForm Model="hotel" OnValidSubmit="@Guardar">
             <DataAnnotationsValidator />
 
-            <div class="card-body p-4">
+            <div class="hotel-form-body">
 
-                <div class="mb-4">
-                    <h6 class="fw-bold text-primary">
-                        <i class="bi bi-info-circle me-2"></i>Informacion basica
-                    </h6>
-                    <hr />
-                </div>
+                <h5 class="hotel-section-title">
+                    <i class="bi bi-info-circle"></i>
+                    Informacion basica
+                </h5>
 
-                <div class="row g-4">
+                <p class="hotel-section-description">
+                    Introduce el nombre, direccion y destino del hotel.
+                </p>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Nombre del hotel</label>
+                <hr class="hotel-form-divider" />
+
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-6 hotel-field">
+                        <label>Nombre del hotel</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-building"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese el nombre"
                                        @bind-Value="hotel.Nombre" />
                         </div>
+
                         <ValidationMessage For="@(() => hotel.Nombre)" />
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Direccion</label>
+                    <div class="col-12 col-md-6 hotel-field">
+                        <label>Direccion</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-geo-alt"></i>
                             </span>
+
                             <InputText class="form-control"
                                        placeholder="Ingrese la direccion"
                                        @bind-Value="hotel.Direccion" />
                         </div>
+
                         <ValidationMessage For="@(() => hotel.Direccion)" />
                     </div>
 
-                    <div class="col-12">
-                        <label class="form-label fw-semibold">Destino</label>
+                    <div class="col-12 hotel-field">
+                        <label>Destino</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-geo-alt-fill"></i>
                             </span>
+
                             <InputSelect class="form-select" @bind-Value="hotel.DestinoId">
                                 <option value="0">Seleccione un destino</option>
+
                                 @foreach (var d in destinos)
                                 {
-                                    <option value="@d.DestinoId">@d.Ciudad, @d.Pais</option>
+                                    <option value="@d.DestinoId">
+                                        @d.Ciudad, @d.Pais
+                                    </option>
                                 }
                             </InputSelect>
                         </div>
+
                         <ValidationMessage For="@(() => hotel.DestinoId)" />
                     </div>
 
                 </div>
 
-                <div class="mb-4 mt-5">
-                    <h6 class="fw-bold text-primary">
-                        <i class="bi bi-graph-up me-2"></i>Detalles del hotel
-                    </h6>
-                    <hr />
-                </div>
+                <hr class="hotel-form-divider" />
 
-                <div class="row g-4">
+                <h5 class="hotel-section-title">
+                    <i class="bi bi-graph-up"></i>
+                    Detalles del hotel
+                </h5>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Categoria (estrellas)</label>
+                <p class="hotel-section-description">
+                    Define la categoria, disponibilidad y precio por noche.
+                </p>
+
+                <div class="row g-3">
+
+                    <div class="col-12 col-md-6 hotel-field">
+                        <label>Categoria (estrellas)</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-star-fill"></i>
                             </span>
+
                             <InputNumber class="form-control"
                                          placeholder="1-5"
                                          @bind-Value="hotel.Categoria" />
                         </div>
+
                         <ValidationMessage For="@(() => hotel.Categoria)" />
                     </div>
 
-                    <div class="col-12 col-md-6">
-                        <label class="form-label fw-semibold">Habitaciones disponibles</label>
+                    <div class="col-12 col-md-6 hotel-field">
+                        <label>Habitaciones disponibles</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-door-closed"></i>
                             </span>
+
                             <InputNumber class="form-control"
                                          placeholder="Cantidad"
                                          @bind-Value="hotel.HabitacionesDisponibles" />
                         </div>
+
                         <ValidationMessage For="@(() => hotel.HabitacionesDisponibles)" />
                     </div>
 
-                    <div class="col-12">
-                        <label class="form-label fw-semibold">Precio por noche</label>
+                    <div class="col-12 hotel-field">
+                        <label>Precio por noche</label>
+
                         <div class="input-group">
-                            <span class="input-group-text bg-light">
+                            <span class="input-group-text">
                                 <i class="bi bi-currency-dollar"></i>
                             </span>
+
                             <InputNumber class="form-control"
                                          placeholder="0.00"
                                          @bind-Value="hotel.PrecioPorNoche" />
                         </div>
+
                         <ValidationMessage For="@(() => hotel.PrecioPorNoche)" />
                     </div>
 
@@ -146,19 +169,23 @@
 
             </div>
 
-            <div class="card-footer bg-light p-4 d-flex gap-2 justify-content-end">
-                <a href="/Hoteles/Index" class="btn btn-outline-secondary">
-                    <i class="bi bi-x-lg me-2"></i>Cancelar
+            <div class="hotel-form-footer">
+
+                <a href="/Hoteles/Index" class="hotel-btn-cancel">
+                    <i class="bi bi-x-lg"></i>
+                    Cancelar
                 </a>
-                <button type="submit" class="btn btn-primary">
-                    <i class="bi bi-check-lg me-2"></i>Guardar hotel
+
+                <button type="submit" class="hotel-btn-save">
+                    <i class="bi bi-check-lg"></i>
+                    Guardar hotel
                 </button>
+
             </div>
 
         </EditForm>
 
     </div>
-
 </div>
 
 @code {

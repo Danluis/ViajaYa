@@ -8,133 +8,133 @@
 
 <PageTitle>Modificar Aerolinea - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="aerolinea-edit-page">
 
-    <div class="mb-4">
-        <a href="/Aerolineas/Index" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver a aerolineas
+    <div class="aerolinea-edit-back">
+        <a href="/Aerolineas/Index">
+            <i class="bi bi-arrow-left"></i>
+            Volver a aerolineas
         </a>
     </div>
 
     @if (aerolinea.AerolineaId == 0)
     {
-        <div class="text-center py-5">
+        <div class="aerolinea-loading">
             <div class="spinner-border text-primary" role="status">
                 <span class="visually-hidden">Cargando...</span>
             </div>
-            <p class="text-muted mt-3">Cargando informacion de la aerolinea...</p>
+            <p>Cargando informacion de la aerolinea...</p>
         </div>
     }
     else
     {
-        <div class="card border-0 shadow-sm mx-auto" style="max-width: 750px;">
-
-            <div class="card-header bg-primary text-white p-4">
-                <div class="d-flex align-items-center gap-3">
-                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
-                        <i class="bi bi-airplane-engines fs-3"></i>
-                    </div>
-
-                    <div class="flex-grow-1">
-                        <h4 class="mb-1 fw-bold">Modificar aerolinea</h4>
-                        <p class="mb-0 text-white-50">
-                            Actualiza la informacion de esta aerolinea.
-                        </p>
-                    </div>
-
-                    <span class="badge bg-white text-primary fs-6">
-                        ID: @aerolinea.AerolineaId
-                    </span>
-                </div>
+        <div class="aerolinea-edit-header">
+            <div class="header-icon">
+                <i class="bi bi-airplane-engines"></i>
             </div>
+
+            <div class="edit-header-info">
+                <span class="section-tag">ACTUALIZAR REGISTRO</span>
+                <h3>Modificar aerolinea</h3>
+                <p>Actualiza la informacion de esta aerolinea.</p>
+            </div>
+
+            <span class="aerolinea-id-badge">
+                ID: @aerolinea.AerolineaId
+            </span>
+        </div>
+
+        <div class="aerolinea-edit-card">
 
             <EditForm Model="aerolinea" OnValidSubmit="@Modificar">
                 <DataAnnotationsValidator />
 
-                <div class="card-body p-4">
+                <div class="aerolinea-edit-body">
 
-                    <h6 class="fw-bold text-primary mb-3">
-                        <i class="bi bi-info-circle me-2"></i>Informacion de la aerolinea
-                    </h6>
-
-                    <hr />
-
-                    <div class="row g-4">
-
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Nombre</label>
-
-                            <div class="input-group">
-                                <span class="input-group-text bg-light">
-                                    <i class="bi bi-airplane"></i>
-                                </span>
-
-                                <InputText class="form-control"
-                                           placeholder="Ingrese el nombre de la aerolinea"
-                                           @bind-Value="aerolinea.Nombre" />
-                            </div>
-
-                            <ValidationMessage For="@(() => aerolinea.Nombre)" />
+                    <div class="aerolinea-section-title">
+                        <div>
+                            <h5>
+                                <i class="bi bi-info-circle"></i>
+                                Informacion de la aerolinea
+                            </h5>
+                            <p>Modifica los datos principales de la aerolinea.</p>
                         </div>
-
-                        <div class="col-12">
-                            <label class="form-label fw-semibold">Pais</label>
-
-                            <div class="input-group">
-                                <span class="input-group-text bg-light">
-                                    <i class="bi bi-globe-americas"></i>
-                                </span>
-
-                                <InputText class="form-control"
-                                           placeholder="Ingrese el pais de origen"
-                                           @bind-Value="aerolinea.Pais" />
-                            </div>
-
-                            <ValidationMessage For="@(() => aerolinea.Pais)" />
-                        </div>
-
                     </div>
+
+                    <div class="aerolinea-form-divider"></div>
+
+                    <div class="aerolinea-edit-field">
+                        <label>Nombre de la aerolinea</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-airplane"></i>
+                            </span>
+
+                            <InputText class="form-control"
+                                       placeholder="Ingrese el nombre de la aerolinea"
+                                       @bind-Value="aerolinea.Nombre" />
+                        </div>
+
+                        <ValidationMessage For="@(() => aerolinea.Nombre)" />
+                    </div>
+
+                    <div class="aerolinea-edit-field">
+                        <label>Pais de origen</label>
+
+                        <div class="input-group">
+                            <span class="input-group-text">
+                                <i class="bi bi-globe-americas"></i>
+                            </span>
+
+                            <InputText class="form-control"
+                                       placeholder="Ingrese el pais de origen"
+                                       @bind-Value="aerolinea.Pais" />
+                        </div>
+
+                        <ValidationMessage For="@(() => aerolinea.Pais)" />
+                    </div>
+
                 </div>
 
-                <div class="card-footer bg-white p-4">
-                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+                <div class="aerolinea-edit-footer">
 
-                        <button type="button"
-                                class="btn btn-outline-danger px-4"
-                                @onclick="Eliminar">
-                            <i class="bi bi-trash me-2"></i>Eliminar
+                    <button type="button"
+                            class="aerolinea-btn-delete"
+                            @onclick="Eliminar">
+                        <i class="bi bi-trash"></i>
+                        Eliminar
+                    </button>
+
+                    <div class="aerolinea-edit-actions">
+                        <a href="/Aerolineas/Index" class="aerolinea-btn-cancel">
+                            Cancelar
+                        </a>
+
+                        <button type="submit" class="aerolinea-btn-save">
+                            <i class="bi bi-floppy"></i>
+                            Guardar cambios
                         </button>
-
-                        <div class="d-flex flex-column flex-sm-row gap-2">
-                            <a href="/Aerolineas/Index" class="btn btn-outline-secondary px-4">
-                                Cancelar
-                            </a>
-
-                            <button type="submit" class="btn btn-primary px-4">
-                                <i class="bi bi-floppy me-2"></i>Guardar cambios
-                            </button>
-                        </div>
-
                     </div>
+
                 </div>
 
             </EditForm>
+
         </div>
     }
+
 </div>
 
 @if (mostrarModal)
 {
-    <div class="modal fade show d-block"
-         tabindex="-1"
-         style="background-color: rgba(0,0,0,0.5);">
-
+    <div class="aerolinea-modal">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow">
+            <div class="modal-content">
 
                 <div class="modal-header">
-                    <h5 class="modal-title fw-bold">
-                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                    <h5 class="modal-title">
+                        <i class="bi bi-exclamation-triangle"></i>
                         Confirmar eliminacion
                     </h5>
 
@@ -146,25 +146,27 @@
                 </div>
 
                 <div class="modal-body">
-                    <p class="mb-2">
+                    <p class="modal-question">
                         Estas seguro de eliminar esta aerolinea?
                     </p>
-                    <p class="text-muted small mb-0">
+
+                    <p class="modal-description">
                         Esta accion no se puede deshacer.
                     </p>
                 </div>
 
                 <div class="modal-footer">
                     <button type="button"
-                            class="btn btn-outline-secondary"
+                            class="modal-btn-cancel"
                             @onclick="CerrarModal">
                         Cancelar
                     </button>
 
                     <button type="button"
-                            class="btn btn-danger"
+                            class="modal-btn-delete"
                             @onclick="ConfirmarEliminar">
-                        <i class="bi bi-trash me-2"></i>Eliminar
+                        <i class="bi bi-trash"></i>
+                        Eliminar
                     </button>
                 </div>
 
@@ -183,6 +185,7 @@
     protected override async Task OnInitializedAsync()
     {
         var resultado = await AerolineaService.Buscar(AerolineaId);
+
         if (resultado.IsSuccess && resultado.Value is not null)
         {
             aerolinea = resultado.Value;

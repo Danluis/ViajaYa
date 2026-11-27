@@ -3,61 +3,68 @@
 @using ViajaYa.Services
 @using Microsoft.AspNetCore.Components.QuickGrid
 @inject AgenteService AgenteService
+@rendermode InteractiveServer
 
 <PageTitle>Agentes - ViajaYa</PageTitle>
 
-<div class="container py-4">
+<div class="agentes-page">
 
-    <div class="mb-4">
-        <a href="/" class="text-decoration-none text-secondary">
-            <i class="bi bi-arrow-left me-2"></i>Volver al inicio
-        </a>
-    </div>
+    <a href="/" class="back-link">
+        <i class="bi bi-arrow-left me-2"></i>
+        Volver al inicio
+    </a>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div class="agentes-header">
+
         <div>
-            <h3 class="fw-bold mb-1">Gestion de Agentes</h3>
-            <p class="text-muted mb-0">Consulta y administra los agentes registrados.</p>
+            <span class="section-tag">Administracion</span>
+            <h1>Gestion de Agentes</h1>
+            <p>Consulta y administra los agentes registrados en ViajaYa.</p>
         </div>
 
-        <a href="/Agentes/Create" class="btn btn-primary px-4">
-            <i class="bi bi-plus-circle me-2"></i>Nuevo agente
+        <a href="/Agentes/Create" class="btn-new-agente">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo agente
         </a>
+
     </div>
 
     @if (agentes is not null)
     {
-        <div class="row g-3 mb-4">
-            <div class="col-12 col-md-4">
-                <div class="card border-0 shadow-sm h-100">
-                    <div class="card-body d-flex align-items-center gap-3">
-                        <div class="rounded-3 bg-primary bg-opacity-10 text-primary p-3">
-                            <i class="bi bi-people fs-3"></i>
-                        </div>
-                        <div>
-                            <p class="text-muted mb-1">Total de agentes</p>
-                            <h4 class="fw-bold mb-0">@agentes.Count</h4>
-                        </div>
-                    </div>
+        <div class="agentes-stats">
+
+            <div class="d-flex align-items-center gap-3">
+                <div class="stat-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <div>
+                    <p class="text-muted mb-1">Total de agentes</p>
+                    <h3 class="fw-bold mb-0">@agentes.Count</h3>
                 </div>
             </div>
+
         </div>
     }
 
-    <div class="card border-0 shadow-sm">
-        <div class="card-header bg-white border-0 p-4">
-            <h5 class="fw-bold mb-1">
-                <i class="bi bi-funnel me-2 text-primary"></i>Buscar agentes
+    <div class="agentes-card">
+
+        <div class="card-heading">
+            <h5>
+                <i class="bi bi-funnel text-primary me-2"></i>
+                Buscar agentes
             </h5>
-            <p class="text-muted small mb-0">Selecciona un criterio para filtrar los registros.</p>
+
+            <p>Selecciona un criterio para filtrar los registros.</p>
         </div>
 
-        <div class="card-body px-4 pb-4">
+        <div class="search-panel">
 
-            <div class="row g-3 mb-4">
+            <div class="row g-3">
 
-                <div class="col-12 col-md-4">
-                    <label class="form-label fw-semibold">Filtrar por</label>
+                <div class="col-12 col-md-4 filter-field">
+                    <label>Filtrar por</label>
+
                     <select class="form-select" @bind="criterioSeleccionado">
                         <option value="">Elija una opcion</option>
                         <option value="agenteId">ID</option>
@@ -66,12 +73,14 @@
                     </select>
                 </div>
 
-                <div class="col-12 col-md-6">
-                    <label class="form-label fw-semibold">Busqueda</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light">
+                <div class="col-12 col-md-6 filter-field">
+                    <label>Busqueda</label>
+
+                    <div class="input-group search-field">
+                        <span class="input-group-text">
                             <i class="bi bi-search"></i>
                         </span>
+
                         <input type="text"
                                class="form-control"
                                placeholder="Escribe para buscar..."
@@ -79,48 +88,58 @@
                                @bind:event="oninput"
                                @onkeyup="ManejarTecla" />
 
-                        <button class="btn btn-primary" @onclick="Buscar">
+                        <button class="btn-search" @onclick="Buscar">
                             Buscar
                         </button>
                     </div>
                 </div>
 
-                <div class="col-12 col-md-2 d-flex align-items-end">
-                    <button class="btn btn-outline-secondary w-100" @onclick="Limpiar">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i>Limpiar
+                <div class="col-12 col-md-2 filter-field d-flex flex-column justify-content-end">
+                    <label class="d-none d-md-block">&nbsp;</label>
+
+                    <button class="btn btn-outline-secondary btn-clear"
+                            @onclick="Limpiar">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        Limpiar
                     </button>
                 </div>
 
             </div>
 
-            @if (agentes is null)
-            {
-                <div class="text-center py-5">
-                    <div class="spinner-border text-primary"></div>
-                    <p class="text-muted mt-3">Cargando agentes...</p>
-                </div>
-            }
-            else if (agentes.Count == 0)
-            {
-                <div class="text-center py-5">
-                    <i class="bi bi-person-x text-muted display-4"></i>
-                    <h5 class="mt-3">No se encontraron agentes</h5>
-                    <p class="text-muted mb-0">No hay registros que coincidan con la busqueda.</p>
-                </div>
-            }
-            else
-            {
+        </div>
+
+        @if (agentes is null)
+        {
+            <div class="loading-state">
+                <div class="spinner-border text-primary"></div>
+                <p class="mt-3">Cargando agentes...</p>
+            </div>
+        }
+        else if (agentes.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="bi bi-person-x"></i>
+                <h5>No se encontraron agentes</h5>
+                <p>No hay registros que coincidan con la busqueda.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-container">
+
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h6 class="fw-bold mb-0">Listado de agentes</h6>
-                    <span class="badge bg-primary-subtle text-primary">
+
+                    <span class="records-badge">
                         @agentes.Count registros
                     </span>
                 </div>
 
                 <div class="table-responsive">
+
                     <QuickGrid Items="@agentes.AsQueryable()"
                                Pagination="@paginacion"
-                               Class="table table-hover align-middle">
+                               Class="agentes-table">
 
                         <PropertyColumn Property="@(a => a.AgenteId)"
                                         Title="ID"
@@ -136,24 +155,27 @@
 
                         <TemplateColumn Title="Opciones">
                             <a href="@($"/Agentes/Edit/{context.AgenteId}")"
-                               class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-pencil-square me-1"></i>Editar
+                               class="btn-edit-agente">
+                                <i class="bi bi-pencil-square"></i>
+                                Editar
                             </a>
                         </TemplateColumn>
 
                     </QuickGrid>
+
                 </div>
 
-                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mt-3">
-                    <span class="text-muted small">
-                        Mostrando @agentes.Count agentes registrados.
-                    </span>
+            </div>
 
-                    <Paginator State="@paginacion" />
-                </div>
-            }
+            <div class="table-footer">
+                <span>
+                    Mostrando @agentes.Count agentes registrados.
+                </span>
 
-        </div>
+                <Paginator State="@paginacion" />
+            </div>
+        }
+
     </div>
 
 </div>
@@ -162,12 +184,20 @@
     private List<Agente>? agentes;
     private string criterioSeleccionado = "";
     private string textoBusqueda = "";
-    private PaginationState paginacion = new PaginationState { ItemsPerPage = 5 };
 
-    private async Task<List<Agente>> ObtenerLista(System.Linq.Expressions.Expression<Func<Agente, bool>> criterio)
+    private PaginationState paginacion = new PaginationState
+    {
+        ItemsPerPage = 5
+    };
+
+    private async Task<List<Agente>> ObtenerLista(
+        System.Linq.Expressions.Expression<Func<Agente, bool>> criterio)
     {
         var resultado = await AgenteService.GetList(criterio);
-        return resultado.IsSuccess ? resultado.Value! : new List<Agente>();
+
+        return resultado.IsSuccess
+            ? resultado.Value!
+            : new List<Agente>();
     }
 
     protected override async Task OnInitializedAsync()
@@ -185,7 +215,8 @@
 
     private async Task Buscar()
     {
-        if (string.IsNullOrWhiteSpace(textoBusqueda) || string.IsNullOrEmpty(criterioSeleccionado))
+        if (string.IsNullOrWhiteSpace(textoBusqueda) ||
+            string.IsNullOrEmpty(criterioSeleccionado))
         {
             agentes = await ObtenerLista(a => true);
             return;
@@ -195,17 +226,23 @@
         {
             case "agenteId":
                 if (int.TryParse(textoBusqueda, out int idBuscado))
+                {
                     agentes = await ObtenerLista(a => a.AgenteId == idBuscado);
+                }
                 else
+                {
                     agentes = new List<Agente>();
+                }
                 break;
 
             case "nombre":
-                agentes = await ObtenerLista(a => a.Nombre.ToLower().Contains(textoBusqueda.ToLower()));
+                agentes = await ObtenerLista(a =>
+                    a.Nombre.ToLower().Contains(textoBusqueda.ToLower()));
                 break;
 
             case "codigo":
-                agentes = await ObtenerLista(a => a.Codigo.ToLower().Contains(textoBusqueda.ToLower()));
+                agentes = await ObtenerLista(a =>
+                    a.Codigo.ToLower().Contains(textoBusqueda.ToLower()));
                 break;
 
             default:
@@ -218,6 +255,7 @@
     {
         criterioSeleccionado = "";
         textoBusqueda = "";
+
         agentes = await ObtenerLista(a => true);
     }
 }

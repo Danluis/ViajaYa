@@ -1,0 +1,271 @@
+﻿
+.agente-edit-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 24px;
+    color: #1e293b;
+}
+
+.agente-edit-back {
+    display: inline-flex;
+    align-items: center;
+    color: #64748b;
+    text-decoration: none;
+    font-weight: 500;
+    margin-bottom: 28px;
+    transition: color 0.2s ease;
+}
+
+    .agente-edit-back:hover {
+        color: #2563eb;
+    }
+
+.agente-edit-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    margin-bottom: 28px;
+}
+
+    .agente-edit-header .header-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #eff6ff;
+        color: #2563eb;
+        border-radius: 16px;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+
+    .agente-edit-header h1 {
+        color: #172554;
+        font-size: 1.8rem;
+        font-weight: 750;
+        margin: 0 0 6px;
+    }
+
+    .agente-edit-header p {
+        color: #64748b;
+        margin: 0;
+    }
+
+.agente-edit-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    box-shadow: 0 5px 18px rgba(15, 23, 42, 0.05);
+    overflow: hidden;
+}
+
+.agente-edit-body {
+    padding: 30px;
+}
+
+.agente-id-badge {
+    display: inline-flex;
+    align-items: center;
+    background: #eff6ff;
+    color: #1d4ed8;
+    padding: 8px 13px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.agente-section-title {
+    color: #1e3a8a;
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+}
+
+.agente-section-description {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-bottom: 0;
+}
+
+.agente-form-divider {
+    border-color: #e2e8f0;
+    margin: 22px 0;
+    opacity: 1;
+}
+
+.agente-edit-field label {
+    display: block;
+    color: #334155;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 9px;
+}
+
+.agente-edit-field .input-group-text {
+    background: #f8fafc;
+    color: #64748b;
+    border-color: #cbd5e1;
+    min-width: 46px;
+    justify-content: center;
+}
+
+.agente-edit-field .form-control {
+    min-height: 46px;
+    border-color: #cbd5e1;
+    box-shadow: none;
+}
+
+    .agente-edit-field .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
+
+.agente-edit-field ::deep .validation-message {
+    display: block;
+    color: #dc2626;
+    font-size: 0.8rem;
+    margin-top: 6px;
+}
+
+.agente-edit-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 22px 30px;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+.agente-edit-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.agente-btn-save,
+.agente-btn-cancel,
+.agente-btn-delete {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 18px;
+    border-radius: 9px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.agente-btn-save {
+    color: white;
+    background: #2563eb;
+    border: 1px solid #2563eb;
+}
+
+    .agente-btn-save:hover {
+        background: #1d4ed8;
+    }
+
+.agente-btn-cancel {
+    color: #475569;
+    background: white;
+    border: 1px solid #cbd5e1;
+}
+
+    .agente-btn-cancel:hover {
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+.agente-btn-delete {
+    color: #dc2626;
+    background: white;
+    border: 1px solid #fecaca;
+}
+
+    .agente-btn-delete:hover {
+        color: white;
+        background: #dc2626;
+        border-color: #dc2626;
+    }
+
+.agente-loading {
+    text-align: center;
+    padding: 65px 20px;
+    color: #64748b;
+}
+
+.agente-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1055;
+    overflow-y: auto;
+    background: rgba(15, 23, 42, 0.55);
+    padding: 20px;
+}
+
+    .agente-modal .modal-dialog {
+        max-width: 480px;
+        margin: 10vh auto 0;
+    }
+
+    .agente-modal ::deep .modal-content {
+        border: none;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 15px 45px rgba(15, 23, 42, 0.2);
+    }
+
+    .agente-modal ::deep .modal-header {
+        padding: 20px 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .agente-modal ::deep .modal-title {
+        color: #1e293b;
+        font-weight: 700;
+    }
+
+    .agente-modal ::deep .modal-body {
+        padding: 24px;
+        color: #475569;
+    }
+
+    .agente-modal ::deep .modal-footer {
+        padding: 16px 24px;
+        border-top: 1px solid #e2e8f0;
+    }
+
+@media (max-width: 600px) {
+    .agente-edit-page {
+        padding: 20px 14px;
+    }
+
+    .agente-edit-header h1 {
+        font-size: 1.5rem;
+    }
+
+    .agente-edit-body {
+        padding: 22px 18px;
+    }
+
+    .agente-edit-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 18px;
+    }
+
+    .agente-edit-actions {
+        flex-direction: column;
+    }
+
+    .agente-btn-save,
+    .agente-btn-cancel,
+    .agente-btn-delete {
+        width: 100%;
+    }
+}

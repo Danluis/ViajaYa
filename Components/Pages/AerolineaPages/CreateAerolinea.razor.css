@@ -1,0 +1,228 @@
+﻿.aerolinea-form-page {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 28px 20px 50px;
+}
+
+.aerolinea-back-link {
+    margin-bottom: 27px;
+}
+
+    .aerolinea-back-link a {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        color: #64748b;
+        font-size: 14px;
+        font-weight: 550;
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+        .aerolinea-back-link a:hover {
+            color: #2563eb;
+        }
+
+.aerolinea-form-header {
+    display: flex;
+    align-items: center;
+    gap: 17px;
+    margin-bottom: 25px;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 62px;
+    height: 62px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 29px;
+}
+
+.section-tag {
+    display: block;
+    margin-bottom: 5px;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+}
+
+.aerolinea-form-header h3 {
+    margin: 0 0 5px;
+    color: #172554;
+    font-size: 25px;
+    font-weight: 750;
+}
+
+.aerolinea-form-header p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.aerolinea-form-card {
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    background: white;
+    box-shadow: 0 5px 20px rgba(15, 23, 42, 0.045);
+}
+
+.aerolinea-form-body {
+    padding: 29px;
+}
+
+.aerolinea-section-title h5 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 6px;
+    color: #172554;
+    font-size: 16px;
+    font-weight: 750;
+}
+
+    .aerolinea-section-title h5 i {
+        color: #2563eb;
+    }
+
+.aerolinea-section-title p {
+    margin: 0;
+    color: #94a3b8;
+    font-size: 12px;
+}
+
+.aerolinea-form-divider {
+    height: 1px;
+    margin: 22px 0;
+    background: #e2e8f0;
+}
+
+.aerolinea-field {
+    margin-bottom: 23px;
+}
+
+    .aerolinea-field:last-child {
+        margin-bottom: 0;
+    }
+
+    .aerolinea-field label {
+        display: block;
+        margin-bottom: 9px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 650;
+    }
+
+    .aerolinea-field .input-group-text {
+        min-width: 45px;
+        justify-content: center;
+        border-color: #dbe3ee;
+        background: #f8fafc;
+        color: #64748b;
+    }
+
+    .aerolinea-field .form-control {
+        min-height: 45px;
+        border-color: #dbe3ee;
+        color: #334155;
+        font-size: 13px;
+        box-shadow: none;
+    }
+
+        .aerolinea-field .form-control:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+::deep .validation-message {
+    display: block;
+    margin-top: 7px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.aerolinea-form-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 11px;
+    padding: 20px 29px;
+    border-top: 1px solid #e2e8f0;
+    background: #fbfdff;
+}
+
+.aerolinea-btn-save,
+.aerolinea-btn-cancel {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 42px;
+    padding: 0 19px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 650;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.aerolinea-btn-save {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: white;
+}
+
+    .aerolinea-btn-save:hover {
+        border-color: #1d4ed8;
+        background: #1d4ed8;
+    }
+
+.aerolinea-btn-cancel {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #475569;
+}
+
+    .aerolinea-btn-cancel:hover {
+        background: #f1f5f9;
+        color: #334155;
+    }
+
+@media (max-width: 576px) {
+    .aerolinea-form-page {
+        padding: 20px 13px 35px;
+    }
+
+    .aerolinea-form-header {
+        align-items: flex-start;
+    }
+
+        .aerolinea-form-header h3 {
+            font-size: 21px;
+        }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 24px;
+    }
+
+    .aerolinea-form-body {
+        padding: 22px 18px;
+    }
+
+    .aerolinea-form-footer {
+        flex-direction: column-reverse;
+        padding: 17px 18px;
+    }
+
+    .aerolinea-btn-save,
+    .aerolinea-btn-cancel {
+        width: 100%;
+    }
+}
