@@ -5,67 +5,151 @@
 @inject HotelService HotelService
 @rendermode InteractiveServer
 
-<PageTitle>Consulta de Hoteles</PageTitle>
+<PageTitle>Hoteles - ViajaYa</PageTitle>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Consulta de Hoteles</h5>
-            <a href="/Hoteles/Create" class="btn btn-primary">
-                <span class="bi bi-plus-circle"></span> Nuevo Hotel
+<div class="hoteles-page">
+
+    <div class="hoteles-header">
+        <div>
+            <a href="/" class="back-link">
+                <i class="bi bi-arrow-left"></i> Volver al inicio
             </a>
+
+            <span class="section-tag">GESTION DEL SISTEMA</span>
+            <h1>Hoteles</h1>
+            <p>Consulta, busca y administra los hoteles registrados.</p>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
-                    <select class="form-select" @bind="criterioSeleccionado">
-                        <option value="">Elija una opción</option>
-                        <option value="hotelId">Id</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="direccion">Direccion</option>
-                        <option value="destino">Destino</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Busqueda</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar"
-                               @bind="textoBusqueda" @bind:event="oninput"
-                               @onkeyup="ManejarTecla" />
-                        <button class="btn btn-outline-secondary" @onclick="Buscar">
-                            <span class="bi bi-search"></span>
-                        </button>
-                    </div>
-                </div>
+
+        <a href="/Hoteles/Create" class="btn-new-hotel">
+            <i class="bi bi-plus-lg"></i>
+            Nuevo hotel
+        </a>
+    </div>
+
+    <div class="hoteles-stats">
+        <div class="stat-icon">
+            <i class="bi bi-building-fill"></i>
+        </div>
+        <div>
+            <span>Total de hoteles</span>
+            <strong>@(hoteles?.Count ?? 0)</strong>
+        </div>
+    </div>
+
+    <div class="hoteles-card">
+
+        <div class="card-heading">
+            <div>
+                <h2>Listado de hoteles</h2>
+                <p>Consulta la informacion de tus hoteles.</p>
             </div>
 
-            @if (hoteles is null)
-            {
-                <p>Cargando...</p>
-            }
-            else
-            {
-                <QuickGrid Items="@hoteles.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
-                    <PropertyColumn Property="@(h => h.HotelId)" Title="HotelId" Sortable="true" />
-                    <PropertyColumn Property="@(h => h.Nombre)" Title="Nombre" Sortable="true" />
-                    <PropertyColumn Property="@(h => h.Direccion)" Title="Direccion" Sortable="true" />
-                    <TemplateColumn Title="Destino">@($"{context.Destino?.Ciudad}, {context.Destino?.Pais}")</TemplateColumn>
-                    <PropertyColumn Property="@(h => h.Categoria)" Title="Categoria" Sortable="true" />
-                    <PropertyColumn Property="@(h => h.HabitacionesDisponibles)" Title="Habitaciones" Sortable="true" />
-                    <TemplateColumn Title="Precio/Noche">@context.PrecioPorNoche.ToString("C")</TemplateColumn>
+            <span class="records-badge">
+                <i class="bi bi-building"></i>
+                @(hoteles?.Count ?? 0) registros
+            </span>
+        </div>
+
+        <div class="search-panel">
+            <div class="filter-field">
+                <label>Filtrar por</label>
+                <select class="form-select" @bind="criterioSeleccionado">
+                    <option value="">Elija una opcion</option>
+                    <option value="hotelId">ID</option>
+                    <option value="nombre">Nombre</option>
+                    <option value="direccion">Direccion</option>
+                    <option value="destino">Destino</option>
+                </select>
+            </div>
+
+            <div class="search-field">
+                <label>Buscar hotel</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Escribe para buscar..."
+                           @bind="textoBusqueda"
+                           @bind:event="oninput"
+                           @onkeyup="ManejarTecla" />
+
+                    <button class="btn-search" @onclick="Buscar">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (hoteles is null)
+        {
+            <div class="loading-state">
+                <div class="spinner-border text-primary"></div>
+                <p>Cargando hoteles...</p>
+            </div>
+        }
+        else if (hoteles.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="bi bi-building-exclamation"></i>
+                <h3>No se encontraron hoteles</h3>
+                <p>Intenta cambiar los criterios de busqueda.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <QuickGrid Items="@hoteles.AsQueryable()"
+                           Pagination="@paginacion"
+                           Class="hoteles-table">
+
+                    <PropertyColumn Property="@(h => h.HotelId)"
+                                    Title="ID"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(h => h.Nombre)"
+                                    Title="Nombre"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(h => h.Direccion)"
+                                    Title="Direccion"
+                                    Sortable="true" />
+
+                    <TemplateColumn Title="Destino">
+                        @if (context.Destino is not null)
+                        {
+                            <span>@context.Destino.Ciudad, @context.Destino.Pais</span>
+                        }
+                    </TemplateColumn>
+
+                    <PropertyColumn Property="@(h => h.Categoria)"
+                                    Title="Categoria"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(h => h.HabitacionesDisponibles)"
+                                    Title="Habitaciones"
+                                    Sortable="true" />
+
+                    <TemplateColumn Title="Precio/Noche">
+                        @context.PrecioPorNoche.ToString("C")
+                    </TemplateColumn>
+
                     <TemplateColumn Title="Opciones">
-                        <a href="@($"/Hoteles/Edit/{context.HotelId}")" class="btn btn-sm btn-outline-primary">
-                            <span class="bi bi-pencil-square"></span> Editar
+                        <a href="@($"/Hoteles/Edit/{context.HotelId}")"
+                           class="btn-edit-hotel">
+                            <i class="bi bi-pencil-square"></i>
+                            Editar
                         </a>
                     </TemplateColumn>
+
                 </QuickGrid>
+            </div>
 
+            <div class="table-footer">
+                <span>Mostrando @hoteles.Count hoteles registrados</span>
                 <Paginator State="@paginacion" />
+            </div>
+        }
 
-                <p class="text-muted">Cantidad: @hoteles.Count</p>
-            }
-        </div>
     </div>
 </div>
 

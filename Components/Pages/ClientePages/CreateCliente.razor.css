@@ -1,0 +1,315 @@
+﻿.create-cliente-page {
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 30px 15px;
+}
+
+/* Navegacion */
+.create-navigation {
+    margin-bottom: 22px;
+}
+
+.create-back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: color .2s ease;
+}
+
+    .create-back-link:hover {
+        color: #2563eb;
+    }
+
+/* Tarjeta principal */
+.create-cliente-card {
+    overflow: hidden;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, .06);
+}
+
+/* Encabezado */
+.create-cliente-header {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 32px;
+    background: linear-gradient(120deg, #2563eb, #1e40af);
+    color: white;
+}
+
+.header-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 65px;
+    height: 65px;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, .25);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, .15);
+    font-size: 29px;
+}
+
+.header-tag {
+    display: block;
+    margin-bottom: 7px;
+    color: #bfdbfe;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 1.5px;
+}
+
+.create-cliente-header h1 {
+    margin: 0 0 7px;
+    font-size: 25px;
+    font-weight: 800;
+    letter-spacing: -.5px;
+}
+
+.create-cliente-header p {
+    margin: 0;
+    color: #dbeafe;
+    font-size: 13px;
+}
+
+/* Cuerpo del formulario */
+.create-cliente-body {
+    padding: 32px;
+}
+
+.form-section-heading {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding-bottom: 20px;
+    margin-bottom: 27px;
+    border-bottom: 1px solid #edf2f7;
+}
+
+.section-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 43px;
+    height: 43px;
+    flex-shrink: 0;
+    border-radius: 12px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 20px;
+}
+
+.form-section-heading h2 {
+    margin: 0 0 5px;
+    color: #172554;
+    font-size: 17px;
+    font-weight: 750;
+}
+
+.form-section-heading p {
+    margin: 0;
+    color: #64748b;
+    font-size: 12px;
+}
+
+/* Distribucion de campos */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 25px 22px;
+}
+
+.form-field {
+    min-width: 0;
+}
+
+    .form-field label {
+        display: block;
+        margin-bottom: 9px;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+/* Inputs */
+.custom-input-group {
+    display: flex;
+    align-items: stretch;
+    min-height: 47px;
+    overflow: hidden;
+    border: 1px solid #dbe2ea;
+    border-radius: 10px;
+    background: white;
+    transition: border-color .2s ease, box-shadow .2s ease;
+}
+
+    .custom-input-group > span {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 47px;
+        flex-shrink: 0;
+        border-right: 1px solid #e2e8f0;
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 16px;
+    }
+
+::deep .custom-input-group .form-control {
+    min-width: 0;
+    min-height: 45px;
+    border: none;
+    border-radius: 0;
+    background: white;
+    color: #1e293b;
+    font-size: 13px;
+    box-shadow: none;
+}
+
+::deep .custom-input-group:focus-within {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+}
+
+::deep .custom-input-group .form-control::placeholder {
+    color: #94a3b8;
+}
+
+::deep .custom-input-group .form-control:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+/* Validaciones */
+::deep .form-field .validation-message {
+    display: block;
+    margin-top: 7px;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+/* Botones */
+.create-cliente-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    padding: 23px 32px;
+    border-top: 1px solid #edf2f7;
+    background: #fafcff;
+}
+
+.btn-cancel-client,
+.btn-save-client {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    min-height: 44px;
+    padding: 0 19px;
+    border-radius: 9px;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+.btn-cancel-client {
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #475569;
+}
+
+    .btn-cancel-client:hover {
+        border-color: #94a3b8;
+        background: #f1f5f9;
+        color: #1e293b;
+    }
+
+.btn-save-client {
+    border: 1px solid #2563eb;
+    background: #2563eb;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 10px rgba(37, 99, 235, .15);
+}
+
+    .btn-save-client:hover {
+        transform: translateY(-2px);
+        background: #1d4ed8;
+        box-shadow: 0 7px 15px rgba(37, 99, 235, .22);
+    }
+
+    /* Accesibilidad */
+    .btn-cancel-client:focus-visible,
+    .btn-save-client:focus-visible,
+    .create-back-link:focus-visible {
+        outline: 3px solid rgba(37, 99, 235, .3);
+        outline-offset: 3px;
+    }
+
+/* Tablets y celulares */
+@media (max-width: 650px) {
+    .create-cliente-page {
+        padding: 20px 10px;
+    }
+
+    .create-cliente-header {
+        align-items: flex-start;
+        padding: 24px 20px;
+    }
+
+    .header-icon {
+        width: 52px;
+        height: 52px;
+        font-size: 23px;
+    }
+
+    .create-cliente-header h1 {
+        font-size: 21px;
+    }
+
+    .create-cliente-body {
+        padding: 23px 20px;
+    }
+
+    .form-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .create-cliente-footer {
+        flex-direction: column-reverse;
+        padding: 20px;
+    }
+
+    .btn-cancel-client,
+    .btn-save-client {
+        width: 100%;
+    }
+}
+
+@media (max-width: 380px) {
+    .create-cliente-header {
+        flex-direction: column;
+    }
+
+        .create-cliente-header h1 {
+            font-size: 19px;
+        }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .create-cliente-page *,
+    .create-cliente-page *::before,
+    .create-cliente-page *::after {
+        transition: none !important;
+        transform: none !important;
+    }
+}

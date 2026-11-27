@@ -7,51 +7,122 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Modificar Destino</PageTitle>
+<PageTitle>Editar Destino - ViajaYa</PageTitle>
 
-<EditForm Model="destino" OnValidSubmit="@Modificar">
-    <DataAnnotationsValidator />
+<div class="container py-4">
 
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header">
-                <h5>Modificar Destino</h5>
-            </div>
-
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label"><strong>Ciudad</strong></label>
-                    <InputText class="form-control" @bind-Value="destino.Ciudad" />
-                    <ValidationMessage For="@(() => destino.Ciudad)" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label"><strong>Pais</strong></label>
-                    <InputText class="form-control" @bind-Value="destino.Pais" />
-                    <ValidationMessage For="@(() => destino.Pais)" />
-                </div>
-
-                <div class="mb-3">
-                    <label class="form-label"><strong>Descripcion</strong></label>
-                    <InputTextArea class="form-control" @bind-Value="destino.Descripcion" />
-                    <ValidationMessage For="@(() => destino.Descripcion)" />
-                </div>
-            </div>
-
-            <div class="card-footer text-center">
-                <a href="/Destinos/Index" class="btn btn-secondary">
-                    <span class="bi bi-arrow-left"></span> Volver
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <span class="bi bi-floppy"></span> Modificar
-                </button>
-                <button type="button" class="btn btn-danger" @onclick="Eliminar">
-                    <span class="bi bi-trash"></span> Eliminar
-                </button>
-            </div>
-        </div>
+    <div class="mb-4">
+        <a href="/Destinos/Index" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver a destinos
+        </a>
     </div>
-</EditForm>
+
+    @if (destino.DestinoId == 0)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="text-muted mt-3">Cargando informacion del destino...</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm mx-auto" style="max-width: 850px;">
+
+            <div class="card-header bg-primary text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
+                        <i class="bi bi-geo-alt fs-3"></i>
+                    </div>
+
+                    <div>
+                        <h4 class="mb-1 fw-bold">Editar destino</h4>
+                        <p class="mb-0 text-white-50">
+                            Modifica la informacion del destino seleccionado.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <EditForm Model="destino" OnValidSubmit="@Modificar">
+                <DataAnnotationsValidator />
+
+                <div class="card-body p-4">
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h6 class="fw-bold text-primary mb-0">
+                            <i class="bi bi-geo-alt me-2"></i>Informacion del destino
+                        </h6>
+
+                        <span class="badge bg-primary-subtle text-primary">
+                            Destino #@destino.DestinoId
+                        </span>
+                    </div>
+
+                    <hr />
+
+                    <div class="row g-4">
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Ciudad</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-building"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese la ciudad"
+                                           @bind-Value="destino.Ciudad" />
+                            </div>
+                            <ValidationMessage For="@(() => destino.Ciudad)" />
+                        </div>
+
+                        <div class="col-12 col-md-6">
+                            <label class="form-label fw-semibold">Pais</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-globe"></i>
+                                </span>
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el pais"
+                                           @bind-Value="destino.Pais" />
+                            </div>
+                            <ValidationMessage For="@(() => destino.Pais)" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Descripcion</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-chat-left-text"></i>
+                                </span>
+                                <InputTextArea class="form-control"
+                                               placeholder="Ingrese una descripcion del destino"
+                                               @bind-Value="destino.Descripcion"
+                                               style="border-radius: 0 8px 8px 0;" />
+                            </div>
+                            <ValidationMessage For="@(() => destino.Descripcion)" />
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="card-footer bg-light p-4 d-flex gap-2 justify-content-end">
+                    <a href="/Destinos/Index" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg me-2"></i>Cancelar
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-lg me-2"></i>Guardar cambios
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="Eliminar">
+                        <i class="bi bi-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+
+            </EditForm>
+
+        </div>
+    }
+</div>
 
 <div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
     <div class="modal-dialog">

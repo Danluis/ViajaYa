@@ -5,62 +5,135 @@
 @inject DestinoService DestinoService
 @rendermode InteractiveServer
 
-<PageTitle>Consulta de Destinos</PageTitle>
+<PageTitle>Destinos - ViajaYa</PageTitle>
 
-<div class="container mt-4">
-    <div class="card shadow-sm">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <h5 class="mb-0">Consulta de Destinos</h5>
-            <a href="/Destinos/Create" class="btn btn-primary">
-                <span class="bi bi-plus-circle"></span> Nuevo Destino
+<div class="destinos-page">
+
+    <div class="destinos-header">
+        <div>
+            <a href="/" class="back-link">
+                <i class="bi bi-arrow-left"></i> Volver al inicio
             </a>
+
+            <span class="section-tag">GESTION DEL SISTEMA</span>
+            <h1>Destinos</h1>
+            <p>Consulta, busca y administra los destinos registrados.</p>
         </div>
-        <div class="card-body">
-            <div class="row mb-3">
-                <div class="col-md-4">
-                    <label class="form-label"><span class="bi bi-funnel"></span> Filtrar por</label>
-                    <select class="form-select" @bind="criterioSeleccionado">
-                        <option value="">Elija una opción</option>
-                        <option value="destinoId">Id</option>
-                        <option value="ciudad">Ciudad</option>
-                        <option value="pais">Pais</option>
-                    </select>
-                </div>
-                <div class="col-md-6">
-                    <label class="form-label">Busqueda</label>
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Buscar"
-                               @bind="textoBusqueda" @bind:event="oninput"
-                               @onkeyup="ManejarTecla" />
-                        <button class="btn btn-outline-secondary" @onclick="Buscar">
-                            <span class="bi bi-search"></span>
-                        </button>
-                    </div>
-                </div>
+
+        <a href="/Destinos/Create" class="btn-new-destino">
+            <i class="bi bi-plus-lg"></i>
+            Nuevo destino
+        </a>
+    </div>
+
+    <div class="destinos-stats">
+        <div class="stat-icon">
+            <i class="bi bi-geo-alt-fill"></i>
+        </div>
+        <div>
+            <span>Total de destinos</span>
+            <strong>@(destinos?.Count ?? 0)</strong>
+        </div>
+    </div>
+
+    <div class="destinos-card">
+
+        <div class="card-heading">
+            <div>
+                <h2>Listado de destinos</h2>
+                <p>Consulta la informacion de tus destinos.</p>
             </div>
 
-            @if (destinos is null)
-            {
-                <p>Cargando...</p>
-            }
-            else
-            {
-                <QuickGrid Items="@destinos.AsQueryable()" Pagination="@paginacion" Class="table table-striped table-hover">
-                    <PropertyColumn Property="@(d => d.DestinoId)" Title="DestinoId" Sortable="true" />
-                    <PropertyColumn Property="@(d => d.Ciudad)" Title="Ciudad" Sortable="true" />
-                    <PropertyColumn Property="@(d => d.Pais)" Title="Pais" Sortable="true" />
+            <span class="records-badge">
+                <i class="bi bi-geo-fill"></i>
+                @(destinos?.Count ?? 0) registros
+            </span>
+        </div>
+
+        <div class="search-panel">
+            <div class="filter-field">
+                <label>Filtrar por</label>
+                <select class="form-select" @bind="criterioSeleccionado">
+                    <option value="">Elija una opcion</option>
+                    <option value="destinoId">ID</option>
+                    <option value="ciudad">Ciudad</option>
+                    <option value="pais">Pais</option>
+                </select>
+            </div>
+
+            <div class="search-field">
+                <label>Buscar destino</label>
+                <div class="input-group">
+                    <input type="text"
+                           class="form-control"
+                           placeholder="Escribe para buscar..."
+                           @bind="textoBusqueda"
+                           @bind:event="oninput"
+                           @onkeyup="ManejarTecla" />
+
+                    <button class="btn-search" @onclick="Buscar">
+                        <i class="bi bi-search"></i>
+                        Buscar
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        @if (destinos is null)
+        {
+            <div class="loading-state">
+                <div class="spinner-border text-primary"></div>
+                <p>Cargando destinos...</p>
+            </div>
+        }
+        else if (destinos.Count == 0)
+        {
+            <div class="empty-state">
+                <i class="bi bi-geo-exclamation"></i>
+                <h3>No se encontraron destinos</h3>
+                <p>Intenta cambiar los criterios de busqueda.</p>
+            </div>
+        }
+        else
+        {
+            <div class="table-responsive">
+                <QuickGrid Items="@destinos.AsQueryable()"
+                           Pagination="@paginacion"
+                           Class="destinos-table">
+
+                    <PropertyColumn Property="@(d => d.DestinoId)"
+                                    Title="ID"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(d => d.Ciudad)"
+                                    Title="Ciudad"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(d => d.Pais)"
+                                    Title="Pais"
+                                    Sortable="true" />
+
+                    <PropertyColumn Property="@(d => d.Descripcion)"
+                                    Title="Descripcion"
+                                    Sortable="false" />
+
                     <TemplateColumn Title="Opciones">
-                        <a href="@($"/Destinos/Edit/{context.DestinoId}")" class="btn btn-sm btn-outline-primary">
-                            <span class="bi bi-pencil-square"></span> Editar
+                        <a href="@($"/Destinos/Edit/{context.DestinoId}")"
+                           class="btn-edit-destino">
+                            <i class="bi bi-pencil-square"></i>
+                            Editar
                         </a>
                     </TemplateColumn>
+
                 </QuickGrid>
+            </div>
 
+            <div class="table-footer">
+                <span>Mostrando @destinos.Count destinos registrados</span>
                 <Paginator State="@paginacion" />
+            </div>
+        }
 
-                <p class="text-muted">Cantidad: @destinos.Count</p>
-            }
-        </div>
     </div>
 </div>
 

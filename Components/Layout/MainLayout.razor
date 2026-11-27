@@ -28,6 +28,7 @@
                         <form action="Account/Logout" method="post">
                             <AntiforgeryToken />
                             <input type="hidden" name="ReturnUrl" value="/" />
+
                             <button type="submit" class="btn-logout">
                                 <i class="bi bi-box-arrow-right"></i>
                                 Salir
@@ -60,6 +61,36 @@
 
 </div>
 
+@if (mostrarSplash)
+{
+    <div class="splash-screen">
+
+        <div class="splash-content">
+
+            <div class="splash-logo">
+                <i class="bi bi-airplane-engines-fill"></i>
+            </div>
+
+            <h1>ViajaYa</h1>
+
+            <p>Tu proximo destino comienza aqui</p>
+
+            <div class="splash-flight">
+                <div class="flight-line"></div>
+                <i class="bi bi-airplane-fill"></i>
+            </div>
+
+            <span class="splash-loading">Preparando tu experiencia...</span>
+
+        </div>
+
+        <div class="splash-footer">
+            GESTION DE VIAJES
+        </div>
+
+    </div>
+}
+
 <div id="blazor-error-ui" data-nosnippet>
     Ha ocurrido un error.
     <a href="." class="reload">Recargar</a>
@@ -67,3 +98,21 @@
 </div>
 
 <Toasts class="p-3" Placement="ToastsPlacement.TopRight" />
+
+@code {
+    private bool mostrarSplash = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await Task.Delay(2500);
+
+            await InvokeAsync(() =>
+            {
+                mostrarSplash = false;
+                StateHasChanged();
+            });
+        }
+    }
+}

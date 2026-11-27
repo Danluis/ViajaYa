@@ -6,63 +6,172 @@
 @inject ToastService toastService
 @inject NavigationManager NavigationManager
 
-<PageTitle>Modificar Aerolinea</PageTitle>
+<PageTitle>Modificar Aerolinea - ViajaYa</PageTitle>
 
-<EditForm Model="aerolinea" OnValidSubmit="@Modificar">
-    <DataAnnotationsValidator />
+<div class="container py-4">
 
-    <div class="container">
-        <div class="card shadow-lg">
-            <div class="card-header">
-                <h5>Modificar Aerolinea</h5>
+    <div class="mb-4">
+        <a href="/Aerolineas/Index" class="text-decoration-none text-secondary">
+            <i class="bi bi-arrow-left me-2"></i>Volver a aerolineas
+        </a>
+    </div>
+
+    @if (aerolinea.AerolineaId == 0)
+    {
+        <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-muted mt-3">Cargando informacion de la aerolinea...</p>
+        </div>
+    }
+    else
+    {
+        <div class="card border-0 shadow-sm mx-auto" style="max-width: 750px;">
+
+            <div class="card-header bg-primary text-white p-4">
+                <div class="d-flex align-items-center gap-3">
+                    <div class="bg-white bg-opacity-25 rounded-3 p-3">
+                        <i class="bi bi-airplane-engines fs-3"></i>
+                    </div>
+
+                    <div class="flex-grow-1">
+                        <h4 class="mb-1 fw-bold">Modificar aerolinea</h4>
+                        <p class="mb-0 text-white-50">
+                            Actualiza la informacion de esta aerolinea.
+                        </p>
+                    </div>
+
+                    <span class="badge bg-white text-primary fs-6">
+                        ID: @aerolinea.AerolineaId
+                    </span>
+                </div>
             </div>
 
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label"><strong>Nombre</strong></label>
-                    <InputText class="form-control" @bind-Value="aerolinea.Nombre" />
-                    <ValidationMessage For="@(() => aerolinea.Nombre)" />
+            <EditForm Model="aerolinea" OnValidSubmit="@Modificar">
+                <DataAnnotationsValidator />
+
+                <div class="card-body p-4">
+
+                    <h6 class="fw-bold text-primary mb-3">
+                        <i class="bi bi-info-circle me-2"></i>Informacion de la aerolinea
+                    </h6>
+
+                    <hr />
+
+                    <div class="row g-4">
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Nombre</label>
+
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-airplane"></i>
+                                </span>
+
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el nombre de la aerolinea"
+                                           @bind-Value="aerolinea.Nombre" />
+                            </div>
+
+                            <ValidationMessage For="@(() => aerolinea.Nombre)" />
+                        </div>
+
+                        <div class="col-12">
+                            <label class="form-label fw-semibold">Pais</label>
+
+                            <div class="input-group">
+                                <span class="input-group-text bg-light">
+                                    <i class="bi bi-globe-americas"></i>
+                                </span>
+
+                                <InputText class="form-control"
+                                           placeholder="Ingrese el pais de origen"
+                                           @bind-Value="aerolinea.Pais" />
+                            </div>
+
+                            <ValidationMessage For="@(() => aerolinea.Pais)" />
+                        </div>
+
+                    </div>
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label"><strong>Pais</strong></label>
-                    <InputText class="form-control" @bind-Value="aerolinea.Pais" />
-                    <ValidationMessage For="@(() => aerolinea.Pais)" />
+                <div class="card-footer bg-white p-4">
+                    <div class="d-flex flex-column flex-sm-row justify-content-between gap-2">
+
+                        <button type="button"
+                                class="btn btn-outline-danger px-4"
+                                @onclick="Eliminar">
+                            <i class="bi bi-trash me-2"></i>Eliminar
+                        </button>
+
+                        <div class="d-flex flex-column flex-sm-row gap-2">
+                            <a href="/Aerolineas/Index" class="btn btn-outline-secondary px-4">
+                                Cancelar
+                            </a>
+
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="bi bi-floppy me-2"></i>Guardar cambios
+                            </button>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
 
-            <div class="card-footer text-center">
-                <a href="/Aerolineas/Index" class="btn btn-secondary">
-                    <span class="bi bi-arrow-left"></span> Volver
-                </a>
-                <button type="submit" class="btn btn-primary">
-                    <span class="bi bi-floppy"></span> Modificar
-                </button>
-                <button type="button" class="btn btn-danger" @onclick="Eliminar">
-                    <span class="bi bi-trash"></span> Eliminar
-                </button>
-            </div>
+            </EditForm>
         </div>
-    </div>
-</EditForm>
-
-<div class="modal fade @(mostrarModal ? "show d-block" : "")" tabindex="-1" style="@(mostrarModal ? "background-color: rgba(0,0,0,0.5);" : "")">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Confirmar eliminacion</h5>
-                <button type="button" class="btn-close" @onclick="CerrarModal"></button>
-            </div>
-            <div class="modal-body">
-                <p>Esta seguro de eliminar esta aerolinea? Esta accion no se puede deshacer.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @onclick="CerrarModal">Cancelar</button>
-                <button type="button" class="btn btn-danger" @onclick="ConfirmarEliminar">Eliminar</button>
-            </div>
-        </div>
-    </div>
+    }
 </div>
+
+@if (mostrarModal)
+{
+    <div class="modal fade show d-block"
+         tabindex="-1"
+         style="background-color: rgba(0,0,0,0.5);">
+
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+
+                <div class="modal-header">
+                    <h5 class="modal-title fw-bold">
+                        <i class="bi bi-exclamation-triangle text-danger me-2"></i>
+                        Confirmar eliminacion
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            aria-label="Cerrar"
+                            @onclick="CerrarModal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p class="mb-2">
+                        Estas seguro de eliminar esta aerolinea?
+                    </p>
+                    <p class="text-muted small mb-0">
+                        Esta accion no se puede deshacer.
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-outline-secondary"
+                            @onclick="CerrarModal">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="ConfirmarEliminar">
+                        <i class="bi bi-trash me-2"></i>Eliminar
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
